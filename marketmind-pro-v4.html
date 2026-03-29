@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MarketMind Pro — AI Market Research</title>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06060F;--sur:#0D0D1C;--sur2:#131325;--sur3:#181830;--bdr:rgba(255,255,255,0.055);--bdr2:rgba(255,255,255,0.1);--acc:#8B6FFF;--grn:#00E5A0;--org:#FF6B35;--txt:#F0ECFF;--mut:#6A6590;--ind:#FFAA33;--acc-glow:rgba(139,111,255,0.14);--gold:#FFD700;--ruby:#FF4466;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--txt);font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1;opacity:.5;}
+.glow{position:fixed;border-radius:50%;filter:blur(160px);pointer-events:none;z-index:0;}
+.g1{width:900px;height:900px;background:rgba(139,111,255,.07);top:-300px;right:-300px;animation:gshift1 12s ease-in-out infinite alternate;}
+.g2{width:700px;height:700px;background:rgba(0,229,160,.05);bottom:-100px;left:-250px;animation:gshift2 15s ease-in-out infinite alternate;}
+@keyframes gshift1{from{transform:translate(0,0)}to{transform:translate(-60px,40px)}}
+@keyframes gshift2{from{transform:translate(0,0)}to{transform:translate(40px,-60px)}}
+.ovl{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:900;display:none;align-items:center;justify-content:center;backdrop-filter:blur(10px);}
+.ovl.on{display:flex;}
+.modal{background:linear-gradient(160deg,var(--sur),var(--sur2));border:1px solid rgba(255,255,255,.09);border-radius:24px;padding:36px;max-width:460px;width:92%;position:relative;box-shadow:0 40px 120px rgba(0,0,0,.8);}
+.modal h2{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.5px;margin-bottom:8px;}
+.modal p{font-size:14px;color:var(--mut);line-height:1.75;margin-bottom:18px;}
+.mclose{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--mut);font-size:22px;cursor:pointer;}
+.minput{width:100%;background:var(--sur2);border:1px solid var(--bdr);border-radius:12px;padding:13px 16px;color:var(--txt);font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;outline:none;margin-bottom:12px;transition:border-color .2s;}
+.minput:focus{border-color:var(--acc);}
+.minput::placeholder{color:var(--mut);}
+.mlabel{font-size:9px;font-family:'JetBrains Mono',monospace;letter-spacing:1.5px;color:var(--mut);display:block;margin-bottom:6px;}
+.mbtn{width:100%;background:linear-gradient(135deg,var(--acc),#6040E8);border:none;border-radius:11px;padding:14px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(139,111,255,.35);}
+.mbtn:hover{opacity:.9;transform:translateY(-1px);}
+.mnote{text-align:center;font-size:11px;color:var(--mut);margin-top:10px;}
+/* PRICING */
+.pricing-modal{background:linear-gradient(160deg,var(--sur),var(--sur2));border:1px solid rgba(255,255,255,.09);border-radius:24px;padding:40px;max-width:820px;width:96%;position:relative;box-shadow:0 40px 120px rgba(0,0,0,.8);}
+.pricing-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--acc),var(--grn),transparent);}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:24px;}
+.pcard{background:var(--sur2);border:1px solid var(--bdr);border-radius:18px;padding:24px;position:relative;transition:all .2s;}
+.pcard:hover{transform:translateY(-3px);}
+.pcard.featured{border-color:rgba(139,111,255,.4);background:linear-gradient(160deg,rgba(139,111,255,.08),var(--sur2));}
+.pcard.featured::before{content:'MOST POPULAR';position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;background:linear-gradient(135deg,var(--acc),var(--grn));color:#fff;padding:4px 14px;border-radius:20px;}
+.pname{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--mut);margin-bottom:8px;}
+.pprice{font-family:'Syne',sans-serif;font-weight:800;font-size:30px;letter-spacing:-1px;margin-bottom:4px;}
+.pper{font-size:11px;color:var(--mut);margin-bottom:16px;}
+.pfeat{display:flex;flex-direction:column;gap:7px;margin-bottom:18px;}
+.pfi{font-size:13px;display:flex;gap:8px;align-items:flex-start;}
+.pfi::before{content:'✓';color:var(--grn);flex-shrink:0;font-weight:700;}
+.pfi.no::before{content:'✗';color:var(--mut);}
+.pfi.no{color:var(--mut);}
+.pbtn{width:100%;border:none;border-radius:11px;padding:11px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:13px;cursor:pointer;transition:all .2s;}
+.pbtn.free-b{background:rgba(255,255,255,.06);color:var(--txt);border:1px solid var(--bdr);}
+.pbtn.pro-b{background:linear-gradient(135deg,var(--acc),#5B3FD4);color:#fff;box-shadow:0 4px 20px rgba(139,111,255,.35);}
+.pbtn.agency-b{background:linear-gradient(135deg,var(--gold),#FF8C00);color:#000;}
+.rzp-note{font-size:11px;color:var(--mut);margin-top:8px;text-align:center;}
+.rzp-note a{color:var(--acc);text-decoration:none;}
+/* HEADER */
+header{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:14px 40px;border-bottom:1px solid var(--bdr);backdrop-filter:blur(30px);background:rgba(6,6,15,.75);}
+.logo{display:flex;align-items:center;gap:11px;cursor:pointer;}
+.logo-ic{width:36px;height:36px;background:linear-gradient(135deg,var(--acc),var(--grn));border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 28px rgba(139,111,255,.4);}
+.logo-tx{font-family:'Syne',sans-serif;font-weight:800;font-size:19px;letter-spacing:-.5px;}
+.hright{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.hbtn{background:transparent;border:1px solid var(--bdr2);border-radius:9px;padding:7px 14px;color:var(--mut);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Plus Jakarta Sans',sans-serif;}
+.hbtn:hover{border-color:var(--acc);color:var(--txt);background:var(--acc-glow);}
+.plan-badge{font-family:'JetBrains Mono',monospace;font-size:9px;padding:5px 13px;border-radius:20px;letter-spacing:1.5px;font-weight:600;cursor:pointer;}
+/* API BANNER */
+#apib{position:relative;z-index:10;background:rgba(255,107,53,.03);border-bottom:1px solid rgba(255,107,53,.1);padding:10px 40px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.ablab{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--org);white-space:nowrap;font-weight:600;}
+.ablab.g{color:var(--grn);}
+.ablab.y{color:var(--gold);}
+#apiKey,#serpKey,#rzpKey{min-width:160px;background:var(--sur2);border:1px solid rgba(255,107,53,.2);border-radius:7px;padding:7px 12px;color:var(--txt);font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;transition:border-color .2s;}
+#apiKey:focus,#serpKey:focus,#rzpKey:focus{border-color:var(--org);}
+#apiKey::placeholder,#serpKey::placeholder,#rzpKey::placeholder{color:var(--mut);}
+.savek{background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.25);border-radius:7px;padding:7px 13px;color:var(--org);font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:11px;cursor:pointer;transition:all .2s;}
+.savek:hover{background:rgba(255,107,53,.2);}
+.savek.g{background:rgba(0,229,160,.07);border-color:rgba(0,229,160,.3);color:var(--grn);}
+.savek.y{background:rgba(255,215,0,.07);border-color:rgba(255,215,0,.3);color:var(--gold);}
+.klink{font-size:10px;color:var(--mut);text-decoration:none;}
+.klink:hover{color:var(--org);}
+.apib-sep{width:1px;height:18px;background:var(--bdr);flex-shrink:0;}
+/* HERO */
+.hero{position:relative;z-index:10;padding:64px 40px 32px;max-width:860px;margin:0 auto;text-align:center;}
+.eye{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--grn);text-transform:uppercase;margin-bottom:18px;opacity:.85;display:inline-flex;align-items:center;gap:8px;}
+.eye::before,.eye::after{content:'';width:30px;height:1px;background:linear-gradient(90deg,transparent,var(--grn));}
+.eye::after{background:linear-gradient(90deg,var(--grn),transparent);}
+h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(30px,5.5vw,60px);line-height:1.02;letter-spacing:-2.5px;margin-bottom:16px;}
+h1 .hl{background:linear-gradient(125deg,#BBA6FF,var(--acc),var(--grn));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sub{color:var(--mut);font-size:15px;line-height:1.75;max-width:600px;margin:0 auto 26px;}
+/* SEARCH */
+.srchwrap{position:relative;z-index:10;max-width:760px;margin:0 auto;padding:0 40px 40px;}
+.srchcard{background:linear-gradient(160deg,var(--sur),var(--sur2));border:1px solid rgba(139,111,255,.18);border-radius:24px;padding:28px;position:relative;overflow:hidden;box-shadow:0 0 100px rgba(139,111,255,.08),0 40px 80px -20px rgba(0,0,0,.5);}
+.srchcard::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--acc),var(--grn),transparent);}
+.slab{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:var(--mut);text-transform:uppercase;margin-bottom:11px;}
+.srow{display:flex;gap:8px;}
+#prod{flex:1;background:rgba(0,0,0,.35);border:1px solid rgba(139,111,255,.2);border-radius:14px;padding:15px 19px;color:var(--txt);font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s;}
+#prod:focus{border-color:var(--acc);box-shadow:0 0 0 4px rgba(139,111,255,.1);}
+#prod::placeholder{color:var(--mut);}
+.gobtn{background:linear-gradient(135deg,var(--acc),#6040E8);border:none;border-radius:14px;padding:15px 26px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;cursor:pointer;white-space:nowrap;transition:all .2s;box-shadow:0 4px 24px rgba(139,111,255,.4);}
+.gobtn:hover{opacity:.93;transform:translateY(-2px);}
+.gobtn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px;align-items:center;}
+.chip{font-size:11px;padding:5px 13px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:14px;color:var(--mut);cursor:pointer;transition:all .2s;}
+.chip:hover{border-color:var(--acc);color:var(--txt);background:var(--acc-glow);}
+/* LOADING */
+#loading{display:none;position:relative;z-index:10;max-width:700px;margin:0 auto 30px;padding:0 36px;}
+.lcard{background:linear-gradient(160deg,var(--sur),var(--sur2));border:1px solid rgba(139,111,255,.2);border-radius:22px;padding:32px;text-align:center;}
+.spin{width:40px;height:40px;border:3px solid var(--bdr);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.lsteps{display:flex;flex-direction:column;gap:7px;margin-top:15px;text-align:left;}
+.ls{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--mut);padding:9px 14px;background:var(--sur2);border-radius:9px;border-left:2px solid transparent;transition:all .3s;}
+.ls.act{color:var(--txt);border-left-color:var(--grn);background:rgba(0,229,160,.04);}
+.ls.dn{color:var(--grn);}
+.sd{width:6px;height:6px;border-radius:50%;background:var(--bdr);flex-shrink:0;}
+.ls.act .sd{background:var(--grn);animation:pls 1s infinite;}
+.ls.dn .sd{background:var(--grn);}
+@keyframes pls{0%,100%{opacity:1}50%{opacity:.3}}
+/* RESULTS */
+#results{display:none;position:relative;z-index:10;max-width:1160px;margin:0 auto;padding:0 40px 80px;}
+.rh{display:flex;align-items:center;justify-content:space-between;padding:18px 0 13px;border-bottom:1px solid var(--bdr);}
+.rlab{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--mut);letter-spacing:3px;margin-bottom:5px;}
+.rprod{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;letter-spacing:-1.5px;}
+.rcat{font-size:13px;color:var(--mut);margin-top:3px;}
+.rhbts{display:flex;gap:6px;}
+.rbtn{background:transparent;border:1px solid var(--bdr2);border-radius:9px;padding:7px 14px;color:var(--mut);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Plus Jakarta Sans',sans-serif;}
+.rbtn:hover{border-color:var(--acc);color:var(--txt);}
+/* TABS */
+.tabbar{display:flex;overflow-x:auto;background:rgba(6,6,15,.9);padding:10px 0 0;border-bottom:1px solid var(--bdr);position:sticky;top:0;z-index:50;backdrop-filter:blur(30px);}
+.tabbar::-webkit-scrollbar{height:3px;}
+.tabbar::-webkit-scrollbar-thumb{background:rgba(139,111,255,.3);}
+.tb{font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;padding:9px 16px;background:transparent;border:none;color:var(--mut);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;}
+.tb:hover{color:var(--txt);}
+.tb.on{color:var(--acc);border-bottom-color:var(--acc);background:rgba(139,111,255,.06);}
+.tc{display:none;padding-top:18px;animation:fin .25s ease;}
+.tc.on{display:block;}
+@keyframes fin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+/* PRO GATE */
+.progate{background:rgba(124,92,252,.05);border:1px solid rgba(124,92,252,.15);border-radius:18px;padding:52px;text-align:center;margin:8px 0;}
+.pgi{font-size:28px;margin-bottom:9px;}
+.pgt{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:17px;margin-bottom:8px;}
+.pgd{font-size:14px;color:var(--mut);line-height:1.7;margin-bottom:16px;}
+.pgbtn{display:inline-block;background:linear-gradient(135deg,var(--acc),#5B3FD4);border:none;border-radius:9px;padding:10px 22px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:13px;cursor:pointer;}
+.tload{display:flex;align-items:center;justify-content:center;padding:70px;flex-direction:column;gap:14px;}
+.tspin{width:28px;height:28px;border:2px solid var(--bdr);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite;}
+/* SHARED */
+.sec{background:var(--sur);border:1px solid var(--bdr);border-radius:18px;padding:24px;margin-bottom:14px;position:relative;overflow:hidden;}
+.sec::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(139,111,255,.25),rgba(0,229,160,.18),transparent);pointer-events:none;}
+.sh{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.si{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.st{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;letter-spacing:-.3px;}
+.sban{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:16px;}
+.sc2{background:var(--sur);border:1px solid var(--bdr);border-radius:18px;padding:20px;position:relative;overflow:hidden;transition:all .2s;}
+.sc2:hover{transform:translateY(-2px);}
+.sc2::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;}
+.sc2.a::after{background:linear-gradient(90deg,var(--grn),transparent);}
+.sc2.b::after{background:linear-gradient(90deg,var(--ind),transparent);}
+.sc2.c::after{background:linear-gradient(90deg,var(--acc),transparent);}
+.sc2.d::after{background:linear-gradient(90deg,var(--org),transparent);}
+.sclb{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--mut);margin-bottom:8px;}
+.scv{font-family:'Syne',sans-serif;font-weight:800;line-height:1.1;margin-bottom:4px;}
+.scsub{font-size:12px;color:var(--mut);}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.mc{background:var(--sur);border:1px solid var(--bdr);border-radius:16px;padding:22px;}
+.mch{display:flex;align-items:center;gap:8px;margin-bottom:11px;}
+.mct{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;}
+.msz{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:30px;letter-spacing:-1px;margin-bottom:4px;}
+.bbl{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-bottom:5px;}
+.bbt{height:6px;background:var(--sur2);border-radius:3px;overflow:hidden;margin-bottom:10px;}
+.bbf{height:100%;border-radius:3px;width:0%;transition:width 1.5s ease;}
+.ib{background:linear-gradient(90deg,var(--ind),#FFB347);}
+.gb{background:linear-gradient(90deg,var(--acc),var(--grn));}
+.vc{background:linear-gradient(135deg,rgba(139,111,255,.12),rgba(0,229,160,.06));border:1px solid rgba(139,111,255,.25);border-radius:20px;padding:28px;margin-bottom:16px;position:relative;overflow:hidden;}
+.vl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;color:#00E5A0;margin-bottom:10px;text-transform:uppercase;}
+.vt{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;line-height:1.2;letter-spacing:-.5px;margin-bottom:12px;}
+.pg2{display:flex;flex-direction:column;gap:7px;}
+.pi{display:flex;gap:10px;align-items:flex-start;background:var(--sur2);border-radius:9px;padding:11px;border:1px solid var(--bdr);}
+.pn{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--org);background:rgba(255,107,53,.1);border-radius:6px;padding:3px 8px;flex-shrink:0;}
+.ptl{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;margin-bottom:4px;}
+.pds{font-size:14px;color:var(--mut);line-height:1.65;}
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.dc,.nc{background:var(--sur2);border-radius:10px;padding:14px;}
+.dc{border:1px solid rgba(0,229,160,.18);}
+.nc{border:1px solid rgba(255,107,53,.18);}
+.clh{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;margin-bottom:11px;}
+.dc .clh{color:var(--grn);}
+.nc .clh{color:var(--org);}
+.il{display:flex;flex-direction:column;gap:7px;}
+.il li{list-style:none;font-size:14px;line-height:1.65;display:flex;gap:8px;}
+.dc .il li::before{content:'→';color:var(--grn);flex-shrink:0;}
+.nc .il li::before{content:'✕';color:var(--org);flex-shrink:0;}
+/* COMPETITORS */
+.cg{display:flex;flex-direction:column;gap:10px;}
+.cc{background:var(--sur2);border:1px solid var(--bdr);border-radius:15px;padding:20px;}
+.cch{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
+.ccn{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:17px;letter-spacing:-.4px;}
+.ccpos{font-size:14px;color:var(--mut);margin-top:2px;}
+.ccsh{font-family:'JetBrains Mono',monospace;font-size:9px;background:var(--sur);border:1px solid var(--bdr);border-radius:6px;padding:3px 9px;color:var(--txt);flex-shrink:0;}
+.ccbody{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;}
+.cslb{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--mut);margin-bottom:5px;}
+.cit{font-size:14px;line-height:1.55;display:flex;gap:6px;margin-bottom:4px;color:rgba(238,234,248,.82);}
+.cs .cit::before{content:'✓';color:var(--grn);flex-shrink:0;}
+.cw .cit::before{content:'✗';color:var(--org);flex-shrink:0;}
+.cgap{background:rgba(0,214,143,.07);border:1px solid rgba(0,214,143,.18);border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.65;}
+.cgap::before{content:'⚡ Opportunity: ';color:var(--grn);font-weight:700;}
+.cmeta{font-size:13px;color:var(--mut);margin-bottom:10px;display:flex;gap:14px;}
+/* PERSONAS */
+.pergrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.percard{background:var(--sur2);border:1px solid var(--bdr);border-radius:18px;padding:22px;transition:all .25s;}
+.percard:hover{border-color:rgba(139,111,255,.3);transform:translateY(-2px);}
+.perav{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:17px;margin-bottom:11px;}
+.pername{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;letter-spacing:-.3px;margin-bottom:3px;}
+.perrole{font-size:13px;color:var(--mut);margin-bottom:13px;}
+.perstat{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px solid var(--bdr);}
+.pssl{color:var(--mut);}
+.persl{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--mut);margin:10px 0 5px;letter-spacing:1px;}
+.pertags{display:flex;flex-wrap:wrap;gap:4px;}
+.pertag{font-size:12px;padding:4px 11px;background:var(--sur);border:1px solid var(--bdr);border-radius:8px;}
+.perq{font-style:italic;font-size:14px;color:var(--grn);line-height:1.65;margin-top:12px;padding:13px;background:rgba(0,229,160,.04);border-radius:11px;border-left:2px solid var(--grn);}
+.wtp{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;margin-top:6px;color:var(--grn);}
+.wtpl{font-size:12px;color:var(--mut);}
+/* AD COPY */
+.atab{font-size:10px;padding:5px 12px;border-radius:7px;background:var(--sur2);border:1px solid var(--bdr);cursor:pointer;color:var(--mut);transition:all .2s;font-family:'JetBrains Mono',monospace;}
+.atab.on{background:rgba(124,92,252,.15);border-color:rgba(124,92,252,.3);color:var(--acc);}
+.adcard{background:var(--sur2);border:1px solid var(--bdr);border-radius:14px;padding:18px;position:relative;transition:border-color .2s;margin-bottom:10px;}
+.adcard:hover{border-color:rgba(124,92,252,.25);}
+.apill{font-size:10px;padding:3px 9px;border-radius:6px;font-family:'JetBrains Mono',monospace;}
+.adhook{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:18px;letter-spacing:-.4px;margin-bottom:9px;line-height:1.25;}
+.adbody{font-size:15px;line-height:1.7;color:rgba(238,234,248,.82);margin-bottom:10px;}
+.adcta{display:inline-block;background:var(--acc);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:10px;padding:4px 12px;border-radius:6px;}
+.cpybtn{position:absolute;top:11px;right:11px;background:transparent;border:1px solid var(--bdr);border-radius:5px;padding:3px 8px;color:var(--mut);font-size:9px;cursor:pointer;font-family:'JetBrains Mono',monospace;}
+.cpybtn:hover{border-color:var(--acc);color:var(--txt);}
+.gad{background:var(--sur2);border:1px solid var(--bdr);border-radius:14px;padding:18px;position:relative;margin-bottom:10px;}
+.gaurl{font-size:10px;color:var(--grn);margin-bottom:4px;font-family:'JetBrains Mono',monospace;}
+.gah{font-size:16px;font-weight:700;color:#7EB3F5;margin-bottom:6px;line-height:1.3;}
+.gadesc{font-size:14px;line-height:1.65;color:rgba(238,234,248,.75);margin-bottom:6px;}
+.gakws span{font-size:9px;padding:2px 8px;background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.15);border-radius:5px;color:var(--grn);margin:2px;}
+/* KEYWORDS */
+.kwtbl{width:100%;border-collapse:collapse;}
+.kwtbl th{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--mut);text-align:left;padding:10px 13px;border-bottom:1px solid var(--bdr);white-space:nowrap;}
+.kwtbl td{font-size:14px;padding:11px 13px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle;}
+.kwtbl tr:hover td{background:rgba(255,255,255,.015);}
+.ibadge{font-size:10px;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace;white-space:nowrap;}
+.ic{background:rgba(0,229,160,.1);color:var(--grn);}
+.ii{background:rgba(124,92,252,.1);color:var(--acc);}
+.it{background:rgba(255,107,53,.1);color:var(--org);}
+.in2{background:rgba(255,153,51,.1);color:var(--ind);}
+.vbar{width:60px;height:5px;background:var(--sur2);border-radius:3px;display:inline-block;vertical-align:middle;overflow:hidden;}
+.vbi{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--acc),var(--grn));}
+.diffdot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle;}
+.dl{background:var(--grn);}
+.dm{background:var(--ind);}
+.dh{background:var(--org);}
+/* UNIT ECONOMICS */
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.calc-inputs{background:var(--sur2);border:1px solid var(--bdr);border-radius:16px;padding:22px;}
+.calc-outputs{display:flex;flex-direction:column;gap:10px;}
+.calc-grp{margin-bottom:16px;}
+.calc-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--mut);margin-bottom:6px;display:flex;justify-content:space-between;}
+.calc-val{font-size:12px;color:var(--acc);font-weight:700;}
+.calc-slider{-webkit-appearance:none;width:100%;height:5px;border-radius:3px;background:var(--sur3);outline:none;cursor:pointer;}
+.calc-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--acc);cursor:pointer;border:2px solid rgba(139,111,255,.3);}
+.kpi-card{background:var(--sur2);border:1px solid var(--bdr);border-radius:14px;padding:16px;transition:border-color .2s;}
+.kpi-card.green{border-color:rgba(0,229,160,.2);background:rgba(0,229,160,.03);}
+.kpi-card.red{border-color:rgba(255,107,53,.2);background:rgba(255,107,53,.03);}
+.kpi-card.yellow{border-color:rgba(255,170,51,.2);background:rgba(255,170,51,.03);}
+.kpi-card.purple{border-color:rgba(139,111,255,.2);background:rgba(139,111,255,.03);}
+.kpi-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--mut);margin-bottom:5px;}
+.kpi-val{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.5px;}
+.kpi-sub{font-size:11px;color:var(--mut);margin-top:2px;}
+.health-meter{height:8px;background:var(--sur3);border-radius:4px;overflow:hidden;margin-top:6px;}
+.health-fill{height:100%;border-radius:4px;transition:width .5s ease;}
+.calc-insight{background:linear-gradient(135deg,rgba(139,111,255,.08),rgba(0,229,160,.04));border:1px solid rgba(139,111,255,.18);border-radius:14px;padding:18px;margin-top:12px;}
+/* STATE MAP */
+.state-region{margin-bottom:16px;}
+.region-hdr{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--mut);margin-bottom:8px;}
+.state-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.state-tile{border-radius:10px;padding:9px 13px;font-size:12px;font-weight:600;cursor:default;transition:transform .2s;border:1px solid transparent;min-width:90px;}
+.state-tile:hover{transform:translateY(-2px);}
+.state-tile.hot{background:rgba(0,229,160,.12);border-color:rgba(0,229,160,.3);color:var(--grn);}
+.state-tile.warm{background:rgba(255,170,51,.1);border-color:rgba(255,170,51,.25);color:var(--ind);}
+.state-tile.cold{background:rgba(255,255,255,.03);border-color:var(--bdr);color:var(--mut);}
+.state-tile.avoid{background:rgba(255,107,53,.06);border-color:rgba(255,107,53,.15);color:rgba(255,107,53,.6);}
+.state-score-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;opacity:.7;margin-top:2px;}
+/* SCHEMES */
+.scheme-card{background:var(--sur2);border:1px solid var(--bdr);border-radius:14px;padding:18px;margin-bottom:10px;transition:border-color .2s;}
+.scheme-card:hover{border-color:rgba(0,229,160,.2);}
+.scheme-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
+.scheme-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:15px;}
+.scheme-ministry{font-size:12px;color:var(--mut);margin-top:2px;}
+.rel-badge{font-size:9px;padding:3px 9px;border-radius:6px;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.rel-HIGH{background:rgba(0,229,160,.12);color:var(--grn);border:1px solid rgba(0,229,160,.2);}
+.rel-MEDIUM{background:rgba(255,170,51,.1);color:var(--ind);border:1px solid rgba(255,170,51,.2);}
+.rel-LOW{background:rgba(107,101,144,.1);color:var(--mut);border:1px solid var(--bdr);}
+/* PLATFORMS */
+.plat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.plat-card{background:var(--sur2);border:1px solid var(--bdr);border-radius:14px;padding:18px;transition:all .2s;}
+.plat-card:hover{border-color:rgba(139,111,255,.25);}
+.plat-card.top-plat{border-color:rgba(0,229,160,.3);background:rgba(0,229,160,.03);}
+.plat-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.plat-name{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;}
+.plat-score-badge{font-family:'JetBrains Mono',monospace;font-size:11px;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.score-high{background:rgba(0,229,160,.15);color:var(--grn);border:1px solid rgba(0,229,160,.25);}
+.score-mid{background:rgba(255,170,51,.12);color:var(--ind);border:1px solid rgba(255,170,51,.2);}
+.score-low{background:rgba(107,101,144,.12);color:var(--mut);border:1px solid var(--bdr);}
+.plat-bar{height:5px;background:var(--sur3);border-radius:3px;overflow:hidden;margin-bottom:8px;}
+.plat-fill{height:100%;border-radius:3px;transition:width 1s ease;}
+.checklist-week{background:var(--sur2);border:1px solid var(--bdr);border-radius:12px;padding:16px;margin-bottom:8px;}
+.checklist-week-hdr{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--acc);margin-bottom:10px;}
+.check-item{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--bdr);font-size:13px;cursor:pointer;}
+.check-item:last-child{border-bottom:none;}
+.check-item:hover{color:var(--grn);}
+/* PITCH DECK */
+.pitch-slide{background:var(--sur2);border:1px solid var(--bdr);border-radius:14px;padding:18px;display:flex;gap:16px;align-items:flex-start;margin-bottom:10px;transition:border-color .2s;}
+.pitch-slide:hover{border-color:rgba(139,111,255,.25);}
+.pitch-num{font-family:'JetBrains Mono',monospace;font-size:10px;width:28px;height:28px;border-radius:8px;background:rgba(139,111,255,.12);border:1px solid rgba(139,111,255,.2);display:flex;align-items:center;justify-content:center;color:var(--acc);flex-shrink:0;}
+.pitch-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;margin-bottom:4px;}
+.pitch-headline{font-size:13px;font-style:italic;margin-bottom:6px;}
+.pitch-stat{font-size:11px;padding:3px 9px;background:rgba(0,229,160,.07);border:1px solid rgba(0,229,160,.15);border-radius:6px;color:var(--grn);display:inline-block;margin:2px;}
+/* SUPPLIERS */
+.supg{display:flex;flex-direction:column;gap:9px;}
+.supc{background:var(--sur2);border:1px solid var(--bdr);border-radius:14px;padding:16px;}
+.suph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;}
+.supn{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:16px;}
+.supl{font-size:14px;color:var(--mut);margin-bottom:7px;}
+.supt{font-size:9px;padding:2px 8px;border-radius:6px;background:rgba(124,92,252,.12);border:1px solid rgba(124,92,252,.2);color:var(--acc);font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.supmeta{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:7px;}
+.smi{font-size:14px;color:var(--mut);}
+.smi strong{color:var(--txt);}
+.scerts{display:flex;flex-wrap:wrap;gap:4px;}
+.scert{font-size:11px;padding:4px 10px;background:rgba(0,214,143,.07);border:1px solid rgba(0,214,143,.16);border-radius:7px;color:var(--grn);}
+.subhub{display:flex;flex-direction:column;gap:6px;margin-top:10px;}
+.hubrow{display:flex;align-items:center;gap:8px;background:var(--sur2);border-radius:7px;padding:8px 11px;border:1px solid var(--bdr);}
+.hubnum{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--ind);background:rgba(255,153,51,.1);border-radius:4px;padding:2px 7px;}
+/* HISTORY */
+#hpanel{position:fixed;right:-380px;top:0;bottom:0;width:360px;background:rgba(10,10,22,.97);border-left:1px solid var(--bdr);z-index:200;transition:right .35s cubic-bezier(.4,0,.2,1);padding:24px;overflow-y:auto;backdrop-filter:blur(30px);}
+#hpanel.open{right:0;}
+.hph{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;}
+.hph h3{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;}
+.hcls{background:none;border:none;color:var(--mut);font-size:22px;cursor:pointer;}
+.hitems{display:flex;flex-direction:column;gap:7px;}
+.hitem{background:var(--sur2);border:1px solid var(--bdr);border-radius:14px;padding:14px;cursor:pointer;transition:all .2s;}
+.hitem:hover{border-color:var(--acc);}
+.hiprod{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:3px;}
+.himeta{font-size:11px;color:var(--mut);font-family:'JetBrains Mono',monospace;}
+/* ALERT LIST */
+.alert-list{display:flex;flex-direction:column;gap:8px;max-height:200px;overflow-y:auto;margin-bottom:16px;}
+.alert-item{display:flex;align-items:center;justify-content:space-between;background:var(--sur2);border:1px solid var(--bdr);border-radius:9px;padding:10px 13px;font-size:13px;}
+.alert-del{background:none;border:none;color:var(--ruby);cursor:pointer;font-size:16px;}
+.errbox{background:rgba(255,107,53,.05);border:1px solid rgba(255,107,53,.18);border-radius:14px;padding:24px;text-align:center;color:var(--org);font-size:14px;line-height:1.75;}
+.empty{text-align:center;padding:24px;color:var(--mut);font-size:12px;}
+.rf{text-align:center;font-size:11px;color:var(--mut);padding-top:16px;border-top:1px solid var(--bdr);font-family:'JetBrains Mono',monospace;line-height:1.9;margin-top:20px;}
+.coloropt{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;}
+.coloropt:hover{border-color:#fff;}
+@media(max-width:768px){header,#apib,.hero,.srchwrap,#results,#loading{padding-left:18px;padding-right:18px;}.sban,.mg,.pergrid,.ccbody,.dd,.supmeta,.calc-grid,.plat-grid,.pricing-grid{grid-template-columns:1fr;}h1{font-size:26px;}.srow{flex-direction:column;}.tb{font-size:11px;padding:7px 10px;}}
+</style>
+</head>
+<body>
+<div class="glow g1"></div>
+<div class="glow g2"></div>
+
+<!-- PRICING MODAL -->
+<div class="ovl" id="pricingOvl">
+  <div class="pricing-modal">
+    <button class="mclose" onclick="closeOvl('pricingOvl')">×</button>
+    <div style="font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:3px;color:var(--grn);margin-bottom:8px;">UNLOCK FULL ACCESS</div>
+    <h2 style="margin-bottom:4px;">Choose Your Plan</h2>
+    <p style="margin-bottom:0;font-size:13px;">Institutional-grade market research for every Indian entrepreneur.</p>
+    <div class="pricing-grid">
+      <div class="pcard">
+        <div class="pname">FREE</div><div class="pprice">₹0</div><div class="pper">forever</div>
+        <div class="pfeat">
+          <div class="pfi">2 reports/month</div>
+          <div class="pfi">Overview + Economics tabs</div>
+          <div class="pfi no">Competitor Analysis</div>
+          <div class="pfi no">State Map & Schemes</div>
+          <div class="pfi no">Pitch Deck Generator</div>
+          <div class="pfi no">PDF Export</div>
+        </div>
+        <button class="pbtn free-b" onclick="closeOvl('pricingOvl')">Continue Free</button>
+      </div>
+      <div class="pcard featured">
+        <div class="pname">PRO</div><div class="pprice" style="color:var(--acc);">₹999</div><div class="pper">per month</div>
+        <div class="pfeat">
+          <div class="pfi">Unlimited reports</div>
+          <div class="pfi">All 11 research tabs</div>
+          <div class="pfi">India State Market Map</div>
+          <div class="pfi">Govt Scheme Finder</div>
+          <div class="pfi">D2C Platform Fit Score</div>
+          <div class="pfi">Pitch Deck Generator</div>
+          <div class="pfi">Trend Alerts (email)</div>
+          <div class="pfi">Competitor Price Refresh</div>
+          <div class="pfi">PDF Export</div>
+        </div>
+        <button class="pbtn pro-b" onclick="initRazorpay('pro')">Upgrade to Pro →</button>
+        <div class="rzp-note">Razorpay powered · <a href="#" onclick="demoActivate('pro');return false;">Demo mode</a></div>
+      </div>
+      <div class="pcard" style="border-color:rgba(255,215,0,.2);">
+        <div class="pname" style="color:var(--gold);">AGENCY</div><div class="pprice" style="color:var(--gold);">₹4,999</div><div class="pper">per month</div>
+        <div class="pfeat">
+          <div class="pfi">Everything in Pro</div>
+          <div class="pfi">White label branding</div>
+          <div class="pfi">5 client workspaces</div>
+          <div class="pfi">Custom domain</div>
+          <div class="pfi">Priority support</div>
+          <div class="pfi">Your logo & colors</div>
+        </div>
+        <button class="pbtn agency-b" onclick="initRazorpay('agency')">Get Agency Plan →</button>
+        <div class="rzp-note">Add Razorpay key above · <a href="https://razorpay.com" target="_blank">Get key</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TREND ALERT MODAL -->
+<div class="ovl" id="alertOvl">
+  <div class="modal">
+    <button class="mclose" onclick="closeOvl('alertOvl')">×</button>
+    <div style="font-size:28px;margin-bottom:8px;">🔔</div>
+    <h2>Trend Alerts</h2>
+    <p>Track Google Trends spikes for products you care about. Get notified when search interest surges — so you can act on ad spend before competitors.</p>
+    <div class="alert-list" id="alertList"><div class="empty">No alerts set.</div></div>
+    <span class="mlabel">YOUR EMAIL</span>
+    <input type="email" class="minput" id="alertEmail" placeholder="you@company.com"/>
+    <span class="mlabel">PRODUCT TO TRACK</span>
+    <input type="text" class="minput" id="alertProd" placeholder="e.g. A2 Desi Ghee India"/>
+    <button class="mbtn" onclick="saveAlert()" style="margin-bottom:10px;">+ Add Alert</button>
+    <div class="mnote">⚠️ Connect Mailgun/SendGrid backend to enable actual email delivery. Alerts stored locally for now.</div>
+  </div>
+</div>
+
+<!-- WHITE LABEL MODAL -->
+<div class="ovl" id="wlOvl">
+  <div class="modal">
+    <button class="mclose" onclick="closeOvl('wlOvl')">×</button>
+    <div style="font-size:26px;margin-bottom:8px;">⚙️</div>
+    <h2>White Label Settings</h2>
+    <p>Rebrand for your agency. Share with clients as your own platform.</p>
+    <span class="mlabel">APP NAME</span>
+    <input type="text" class="minput" id="wlName" placeholder="MarketMind"/>
+    <span class="mlabel">TAGLINE</span>
+    <input type="text" class="minput" id="wlTag" placeholder="AI Market Research Agent"/>
+    <span class="mlabel" style="margin-bottom:8px;">ACCENT COLOR</span>
+    <div style="display:flex;gap:9px;align-items:center;margin-bottom:15px;">
+      <input type="color" id="wlColor" value="#7C5CFC" style="width:44px;height:32px;border-radius:7px;border:1px solid var(--bdr);background:none;cursor:pointer;"/>
+      <div style="display:flex;gap:5px;">
+        <div class="coloropt" style="background:#7C5CFC" onclick="pickColor('#7C5CFC')"></div>
+        <div class="coloropt" style="background:#00B4D8" onclick="pickColor('#00B4D8')"></div>
+        <div class="coloropt" style="background:#F72585" onclick="pickColor('#F72585')"></div>
+        <div class="coloropt" style="background:#3A86FF" onclick="pickColor('#3A86FF')"></div>
+        <div class="coloropt" style="background:#FB5607" onclick="pickColor('#FB5607')"></div>
+        <div class="coloropt" style="background:#00CC88" onclick="pickColor('#00CC88')"></div>
+      </div>
+    </div>
+    <button class="mbtn" onclick="saveWL()">Apply Branding</button>
+  </div>
+</div>
+
+<!-- HISTORY PANEL -->
+<div id="hpanel">
+  <div class="hph"><h3>📋 Report History</h3><button class="hcls" onclick="toggleHist()">×</button></div>
+  <div class="hitems" id="hitems"><div class="empty">No reports yet.</div></div>
+</div>
+
+<header>
+  <div class="logo" onclick="newSearch()">
+    <div class="logo-ic">📊</div>
+    <div class="logo-tx" id="appNm">Market<span style="color:var(--grn)">Mind</span> <span style="font-size:11px;color:var(--mut);font-family:'JetBrains Mono',monospace;font-weight:400;">AI</span></div>
+  </div>
+  <div class="hright">
+    <span id="planBadge" class="plan-badge" onclick="showPricingModal()" style="background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(255,170,51,.1));border:1px solid rgba(255,215,0,.3);color:var(--gold);">👑 PRO</span>
+    <span id="pipelineBadge" style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:5px 11px;border-radius:20px;letter-spacing:1px;font-weight:600;background:rgba(107,101,144,.1);border:1px solid var(--bdr);color:var(--mut);">🔑 Direct: Claude</span>
+    <span id="costTracker" style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:5px 10px;border-radius:8px;background:rgba(0,229,160,.06);border:1px solid rgba(0,229,160,.15);color:var(--grn);display:none;">~$0.0000 · 0 calls</span>
+    <button class="hbtn" onclick="toggleHist()">📋 History</button>
+    <button class="hbtn" onclick="openAlertModal()">🔔 Alerts</button>
+    <button class="hbtn" onclick="document.getElementById('wlOvl').classList.add('on')">⚙️ White Label</button>
+    <button class="hbtn" id="expBtn" style="display:none" onclick="doPDF()">⬇️ PDF</button>
+  </div>
+</header>
+
+<div id="apib">
+  <div class="ablab">ANTHROPIC</div>
+  <input type="password" id="apiKey" placeholder="sk-ant-api03-xxxx (fallback only)"/>
+  <button class="savek" onclick="saveKey()">Save</button>
+  <span id="kstat" style="font-size:11px;color:var(--mut);">⚪ Not set</span>
+  <a class="klink" href="https://console.anthropic.com/settings/keys" target="_blank">Get key →</a>
+  <div class="apib-sep"></div>
+  <div class="ablab" style="color:#00CFFF;font-size:11px;letter-spacing:1.5px;font-weight:700;">PROXY URL</div>
+  <input type="text" id="proxyUrl" placeholder="https://your-app.railway.app" style="min-width:240px;background:var(--sur2);border:1px solid rgba(0,207,255,.25);border-radius:7px;padding:7px 12px;color:var(--txt);font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;transition:border-color .2s;"/>
+  <button class="savek" onclick="saveProxyUrl()" style="background:rgba(0,207,255,.1);border-color:rgba(0,207,255,.3);color:#00CFFF;">Connect</button>
+  <span id="pxstat" style="font-size:11px;color:var(--mut);">⚪ Not connected</span>
+  <div class="apib-sep"></div>
+  <div class="ablab g">SERPAPI</div>
+  <input type="password" id="serpKey" placeholder="SerpAPI key (Google Trends)"/>
+  <button class="savek g" onclick="saveSerpKey()">Save</button>
+  <span id="skstat" style="font-size:11px;color:var(--mut);">⚪ Not set</span>
+  <a class="klink" href="https://serpapi.com/" target="_blank" style="color:var(--grn);">Get →</a>
+  <div class="apib-sep"></div>
+  <div class="ablab y">RAZORPAY</div>
+  <input type="password" id="rzpKey" placeholder="rzp_live_xxxx (for payments)"/>
+  <button class="savek y" onclick="saveRzpKey()">Save</button>
+  <span id="rzstat" style="font-size:11px;color:var(--mut);">⚪ Not set</span>
+  <a class="klink" href="https://razorpay.com" target="_blank" style="color:var(--gold);">Get →</a>
+</div>
+
+<div class="hero">
+  <div class="eye">Perplexity · DeepSeek · Claude · Smart Routing · Live Web Search</div>
+  <h1>Institutional-Grade<br><span class="hl">Market Research</span></h1>
+  <p class="sub">India & Global market intelligence, competitors, personas, ad copy, keywords, state map, govt schemes, D2C platform fit, pitch deck, unit economics — all in under 90 seconds.</p>
+</div>
+
+<div class="srchwrap">
+  <div class="srchcard">
+    <div class="slab">Enter Product or Category</div>
+    <div class="srow">
+      <input type="text" id="prod" placeholder="e.g. A2 Desi Ghee, EV Chargers, D2C Skincare..."/>
+      <button class="gobtn" id="goBtn" onclick="run()">Analyze →</button>
+    </div>
+    <div class="chips">
+      <span style="font-size:9px;color:var(--mut);font-family:'JetBrains Mono',monospace;">TRY:</span>
+      <span class="chip" onclick="qs('Premium A2 Desi Ghee India')">A2 Desi Ghee</span>
+      <span class="chip" onclick="qs('EV Charging Stations India')">EV Charging</span>
+      <span class="chip" onclick="qs('D2C Skincare India')">D2C Skincare</span>
+      <span class="chip" onclick="qs('Whey Protein Supplements India')">Protein Supps</span>
+      <span class="chip" onclick="qs('AI SaaS Tools India')">AI SaaS</span>
+      <span class="chip" onclick="qs('Ethnic Wear D2C India')">Ethnic Wear</span>
+    </div>
+  </div>
+</div>
+
+<div id="loading">
+  <div class="lcard">
+    <div class="spin"></div>
+    <div style="font-weight:800;font-size:15px;margin-bottom:4px;">Researching the market...</div>
+    <div style="color:var(--mut);font-size:11px;">Claude is live-searching the web · Smart model routing active</div>
+    <div class="lsteps">
+      <div class="ls act" id="s1"><div class="sd"></div><span id="s1txt">Searching live market data...</span></div>
+      <div class="ls" id="s2"><div class="sd"></div><span id="s2txt">Structuring & parsing data...</span></div>
+      <div class="ls" id="s3"><div class="sd"></div>Claude analyzing market & strategy...</div>
+      <div class="ls" id="s4"><div class="sd"></div>Synthesizing verdict & building report...</div>
+    </div>
+  </div>
+</div>
+
+<div id="results">
+  <div class="rh">
+    <div>
+      <div class="rlab">MARKET RESEARCH REPORT</div>
+      <div class="rprod" id="rProd">—</div>
+      <div class="rcat" id="rCat"></div>
+    </div>
+    <div class="rhbts">
+      <button class="rbtn" onclick="doPDF()">⬇️ PDF</button>
+      <button class="rbtn" onclick="newSearch()">← New Search</button>
+    </div>
+  </div>
+  <div class="tabbar">
+    <button class="tb on"  onclick="swTab('overview',this)">📊 Overview</button>
+    <button class="tb"     onclick="swTab('competitors',this)">🔍 Competitors</button>
+    <button class="tb"     onclick="swTab('personas',this)">👥 Personas</button>
+    <button class="tb"     onclick="swTab('marketing',this)">📈 Marketing</button>
+    <button class="tb"     onclick="swTab('economics',this)">🧮 Economics</button>
+    <button class="tb"     onclick="swTab('statemap',this)">🗺️ State Map</button>
+    <button class="tb"     onclick="swTab('schemes',this)">🏛️ Schemes</button>
+    <button class="tb"     onclick="swTab('platforms',this)">📦 Platforms</button>
+    <button class="tb"     onclick="swTab('pitchdeck',this)">🎯 Pitch Deck</button>
+    <button class="tb"     onclick="swTab('suppliers',this)">🏭 Suppliers</button>
+    <button class="tb"     onclick="swTab('verdict',this)">✅ Verdict</button>
+  </div>
+  <div class="tc on" id="tab-overview"></div>
+  <div class="tc" id="tab-competitors"></div>
+  <div class="tc" id="tab-personas"></div>
+  <div class="tc" id="tab-marketing"></div>
+  <div class="tc" id="tab-economics"></div>
+  <div class="tc" id="tab-statemap"></div>
+  <div class="tc" id="tab-schemes"></div>
+  <div class="tc" id="tab-platforms"></div>
+  <div class="tc" id="tab-pitchdeck"></div>
+  <div class="tc" id="tab-suppliers"></div>
+  <div class="tc" id="tab-verdict"></div>
+  <div class="rf">Generated by <span id="rfNm">MarketMind Pro</span> · <span id="pipelineFooter">Multi-Model Pipeline: Perplexity → DeepSeek → Claude</span> · <span id="rfDate"></span><br>AI-synthesized from live data. Validate with primary research before major decisions.</div>
+</div>
+
+<script>
+// STATE
+let AKEY=localStorage.getItem('mm_key')||'',SKEY=localStorage.getItem('mm_skey')||'',RZPKEY=localStorage.getItem('mm_rzp')||'';
+let PROXY_URL=localStorage.getItem('mm_proxy')||'';
+let rData={},curProd='',curTab='overview',loaded={};
+let rCount=parseInt(localStorage.getItem('mm_cnt')||'0');
+let currentPlan='pro'; // PRO UNLOCKED — all features active
+let isPro=true;
+let wl=JSON.parse(localStorage.getItem('mm_wl')||'{"name":"MarketMind","color":"#8B6FFF"}');
+let hist=JSON.parse(localStorage.getItem('mm_hist')||'[]');
+let alerts=JSON.parse(localStorage.getItem('mm_alerts')||'[]');
+const FREE_LIMIT=999999; // Unlimited
+const TABS=['overview','competitors','personas','marketing','economics','statemap','schemes','platforms','pitchdeck','suppliers','verdict'];
+
+// INIT
+(function(){
+  applyWL();
+  if(AKEY){document.getElementById('apiKey').value=AKEY;document.getElementById('kstat').innerHTML='<span style="color:var(--grn)">✅ Saved</span>';}
+  if(SKEY){document.getElementById('serpKey').value=SKEY;document.getElementById('skstat').innerHTML='<span style="color:var(--grn)">✅ Saved</span>';}
+  if(RZPKEY){document.getElementById('rzpKey').value=RZPKEY;document.getElementById('rzstat').innerHTML='<span style="color:var(--grn)">✅ Saved</span>';}
+  if(PROXY_URL){document.getElementById('proxyUrl').value=PROXY_URL;checkProxyHealth(false);}
+  else{updatePipelineBadge('none');}
+  updatePlanBadge();
+  // PRO UNLOCKED BY DEFAULT
+  document.getElementById('rfDate').textContent=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  document.querySelectorAll('.ovl').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('on');}));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.ovl').forEach(o=>o.classList.remove('on'));document.getElementById('hpanel').classList.remove('open');}});
+})();
+
+// PLAN
+function updatePlanBadge(){
+  const b=document.getElementById('planBadge');if(!b)return;
+  if(currentPlan==='agency'){b.innerHTML='👑 AGENCY';b.style.cssText='background:linear-gradient(135deg,rgba(255,215,0,.2),rgba(255,140,0,.15));border:1px solid rgba(255,215,0,.4);color:var(--gold);padding:5px 13px;border-radius:20px;font-family:JetBrains Mono,monospace;font-size:9px;letter-spacing:1.5px;cursor:pointer;';}
+  else if(currentPlan==='pro'){b.innerHTML='⚡ PRO';b.style.cssText='background:linear-gradient(135deg,rgba(139,111,255,.25),rgba(0,229,160,.15));border:1px solid rgba(139,111,255,.4);color:#C4AAFF;padding:5px 13px;border-radius:20px;font-family:JetBrains Mono,monospace;font-size:9px;letter-spacing:1.5px;cursor:pointer;';}
+  else{b.innerHTML=`🔓 FREE · ${rCount}/${FREE_LIMIT}`;b.style.cssText='background:rgba(107,101,144,.2);border:1px solid rgba(107,101,144,.3);color:var(--mut);padding:5px 13px;border-radius:20px;font-family:JetBrains Mono,monospace;font-size:9px;letter-spacing:1.5px;cursor:pointer;';}
+}
+function showPricingModal(){document.getElementById('pricingOvl').classList.add('on');}
+function activatePlan(plan,pid){
+  currentPlan=plan;isPro=true;localStorage.setItem('mm_plan',plan);if(pid)localStorage.setItem('mm_payment_id',pid);
+  closeOvl('pricingOvl');updatePlanBadge();
+  alert(`✅ ${plan.toUpperCase()} activated! All features unlocked.`);
+  if(curTab&&curTab!=='overview'&&document.getElementById('results').style.display!=='none'){delete loaded[curTab];loadTab(curTab);}
+}
+function demoActivate(plan){if(confirm(`Activate ${plan.toUpperCase()} in DEMO mode? (no real payment)`))activatePlan(plan,'demo_'+Date.now());}
+function initRazorpay(plan){
+  const amounts={pro:99900,agency:499900},labels={pro:'MarketMind Pro — ₹999/month',agency:'MarketMind Agency — ₹4,999/month'};
+  const key=RZPKEY||localStorage.getItem('mm_rzp')||'';
+  if(!key){if(confirm('No Razorpay key found.\nClick OK to activate in DEMO mode.'))activatePlan(plan,'demo_'+Date.now());return;}
+  if(typeof Razorpay==='undefined'){alert('Razorpay script failed to load.');return;}
+  const rzp=new Razorpay({key,amount:amounts[plan],currency:'INR',name:wl.name||'MarketMind',description:labels[plan],handler:r=>activatePlan(plan,r.razorpay_payment_id),prefill:{email:localStorage.getItem('mm_email')||''},theme:{color:wl.color||'#8B6FFF'}});
+  rzp.open();
+}
+
+// API KEYS
+function saveKey(){const k=document.getElementById('apiKey').value.trim();if(!k||!k.startsWith('sk-ant-')){alert('Invalid key');return;}AKEY=k;localStorage.setItem('mm_key',k);document.getElementById('kstat').innerHTML='<span style="color:var(--grn)">✅ Saved</span>';}
+function saveSerpKey(){const k=document.getElementById('serpKey').value.trim();if(!k){alert('Paste your SerpAPI key');return;}SKEY=k;localStorage.setItem('mm_skey',k);document.getElementById('skstat').innerHTML='<span style="color:var(--grn)">✅ Saved</span>';}
+function saveRzpKey(){const k=document.getElementById('rzpKey').value.trim();if(!k){alert('Paste your Razorpay key');return;}RZPKEY=k;localStorage.setItem('mm_rzp',k);document.getElementById('rzstat').innerHTML='<span style="color:var(--grn)">✅ Saved</span>';}
+
+async function saveProxyUrl(){
+  const url=document.getElementById('proxyUrl').value.trim().replace(/\/+$/,'');
+  if(!url){alert('Paste your Railway/Render URL');return;}
+  PROXY_URL=url;localStorage.setItem('mm_proxy',url);
+  document.getElementById('pxstat').innerHTML='<span style="color:var(--ind)">⏳ Connecting...</span>';
+  await checkProxyHealth(true);
+}
+
+async function checkProxyHealth(showAlert=false){
+  if(!PROXY_URL){updatePipelineBadge('none');return;}
+  try{
+    const r=await fetch(`${PROXY_URL}/api/health`,{signal:AbortSignal.timeout(8000)});
+    if(!r.ok)throw new Error(`HTTP ${r.status}`);
+    const d=await r.json();
+    const modeLabels={
+      'full-pipeline':'⚡ Full Pipeline (Pplx→DS→Claude)',
+      'perplexity-claude':'⚡ Perplexity→Claude',
+      'claude-only':'☁️ Claude Only via Proxy'
+    };
+    const label=modeLabels[d.mode]||d.mode;
+    document.getElementById('pxstat').innerHTML=`<span style="color:var(--grn)">✅ ${label}</span>`;
+    updatePipelineBadge(d.mode, d.keys);
+    if(showAlert)showProxyToast(d);
+  }catch(e){
+    document.getElementById('pxstat').innerHTML=`<span style="color:var(--ruby)">❌ ${e.message}</span>`;
+    updatePipelineBadge('error');
+    if(showAlert)alert(`Could not reach proxy: ${e.message}\nCheck the URL and that the server is running.`);
+  }
+}
+
+function showProxyToast(d){
+  const el=document.createElement('div');
+  el.style.cssText='position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--sur);border:1px solid rgba(0,229,160,.3);border-radius:14px;padding:16px 20px;max-width:320px;box-shadow:0 20px 60px rgba(0,0,0,.6);animation:fin .3s ease;';
+  el.innerHTML=`<div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--grn);letter-spacing:2px;margin-bottom:6px;">PROXY CONNECTED ✅</div>
+  <div style="font-weight:700;font-size:14px;margin-bottom:8px;">Mode: ${d.mode}</div>
+  <div style="font-size:12px;color:var(--mut);line-height:1.6">${d.cost_estimate}</div>
+  <div style="font-size:11px;margin-top:8px;display:flex;gap:10px;">
+    ${d.keys?.perplexity?'<span style="color:var(--grn)">✓ Perplexity</span>':'<span style="color:var(--mut)">✗ Perplexity</span>'}
+    ${d.keys?.deepseek?'<span style="color:var(--grn)">✓ DeepSeek</span>':'<span style="color:var(--mut)">✗ DeepSeek</span>'}
+    ${d.keys?.serpapi?'<span style="color:var(--grn)">✓ SerpAPI</span>':'<span style="color:var(--mut)">✗ SerpAPI</span>'}
+  </div>`;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),5000);
+}
+
+function updatePipelineBadge(mode, keys={}){
+  const el=document.getElementById('pipelineBadge');if(!el)return;
+  const configs={
+    'full-pipeline':   {txt:'⚡ Full Pipeline',  bg:'rgba(0,229,160,.1)', bc:'rgba(0,229,160,.3)', c:'var(--grn)'},
+    'perplexity-claude':{txt:'⚡ Pplx+Claude',  bg:'rgba(255,170,51,.08)',bc:'rgba(255,170,51,.25)',c:'var(--ind)'},
+    'claude-only':     {txt:'☁️ Proxy: Claude', bg:'rgba(139,111,255,.1)',bc:'rgba(139,111,255,.3)',c:'var(--acc)'},
+    'none':            {txt:'🔑 Direct: Claude', bg:'rgba(107,101,144,.1)',bc:'var(--bdr)',           c:'var(--mut)'},
+    'error':           {txt:'❌ Proxy Error',    bg:'rgba(255,68,68,.08)', bc:'rgba(255,68,68,.2)',   c:'var(--ruby)'}
+  };
+  const cfg=configs[mode]||configs['none'];
+  el.textContent=cfg.txt;
+  el.style.cssText=`font-family:'JetBrains Mono',monospace;font-size:9px;padding:5px 11px;border-radius:20px;letter-spacing:1px;font-weight:600;background:${cfg.bg};border:1px solid ${cfg.bc};color:${cfg.c};`;
+}
+
+// WHITE LABEL
+function applyWL(){
+  const nm=wl.name||'MarketMind',c=wl.color||'#7C5CFC';
+  document.getElementById('appNm').innerHTML=nm+' <span style="font-size:11px;color:var(--mut);font-family:\'JetBrains Mono\',monospace;font-weight:400;">AI</span>';
+  document.title=nm+' AI — Market Research';
+  document.getElementById('rfNm').textContent=nm+' AI';
+  document.documentElement.style.setProperty('--acc',c);
+  if(document.getElementById('wlName'))document.getElementById('wlName').value=nm;
+  if(document.getElementById('wlColor'))document.getElementById('wlColor').value=c;
+}
+function pickColor(c){document.getElementById('wlColor').value=c;}
+function saveWL(){wl={name:document.getElementById('wlName').value.trim()||'MarketMind',color:document.getElementById('wlColor').value};localStorage.setItem('mm_wl',JSON.stringify(wl));applyWL();closeOvl('wlOvl');}
+function closeOvl(id){document.getElementById(id).classList.remove('on');}
+
+// GATE
+function checkGate(){if(isPro)return true;if(rCount>=FREE_LIMIT){showPricingModal();return false;}return true;}
+
+// ALERTS
+function openAlertModal(){renderAlertList();document.getElementById('alertOvl').classList.add('on');}
+function saveAlert(){
+  const e=document.getElementById('alertEmail').value.trim(),p=document.getElementById('alertProd').value.trim();
+  if(!e||!e.includes('@')){alert('Valid email required');return;}
+  if(!p){alert('Enter a product');return;}
+  alerts.push({email:e,product:p,added:new Date().toLocaleDateString('en-IN'),active:true});
+  localStorage.setItem('mm_alerts',JSON.stringify(alerts));
+  document.getElementById('alertEmail').value='';document.getElementById('alertProd').value='';
+  renderAlertList();
+}
+function deleteAlert(i){alerts.splice(i,1);localStorage.setItem('mm_alerts',JSON.stringify(alerts));renderAlertList();}
+function renderAlertList(){
+  const el=document.getElementById('alertList');if(!el)return;
+  el.innerHTML=alerts.length?alerts.map((a,i)=>`<div class="alert-item"><div><div style="font-weight:600">${a.product}</div><div style="font-size:11px;color:var(--mut)">${a.email} · ${a.added}</div></div><button class="alert-del" onclick="deleteAlert(${i})">🗑</button></div>`).join(''):'<div class="empty">No alerts set.</div>';
+}
+
+// HISTORY
+function saveToHist(prod,data){
+  hist=[{prod,cat:data.category||'',score:data.investment_score||'—',verdict:data.investment_verdict||'',date:new Date().toLocaleDateString('en-IN'),data},...hist.slice(0,4)];
+  localStorage.setItem('mm_hist',JSON.stringify(hist));renderHistPanel();
+}
+function renderHistPanel(){
+  const el=document.getElementById('hitems');
+  el.innerHTML=hist.length?hist.map((r,i)=>`<div class="hitem" onclick="loadFromHist(${i})"><div class="hiprod">${r.prod}</div><div class="himeta">${r.verdict} · ${r.score}/10 · ${r.date}</div></div>`).join(''):'<div class="empty">No reports yet.</div>';
+}
+function loadFromHist(i){
+  const e=hist[i];if(!e)return;
+  curProd=e.prod;rData={overview:e.data};loaded={overview:true};
+  document.getElementById('rProd').textContent=e.prod;document.getElementById('rCat').textContent=e.cat;
+  renderOverview(e.data);document.getElementById('results').style.display='block';document.getElementById('expBtn').style.display='inline-flex';
+  swTabById('overview');toggleHist();
+}
+function toggleHist(){document.getElementById('hpanel').classList.toggle('open');}
+
+// TABS
+function swTab(name,btn){
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on');
+  document.querySelectorAll('.tc').forEach(c=>c.classList.remove('on'));document.getElementById('tab-'+name).classList.add('on');
+  curTab=name;loadTab(name);
+}
+function swTabById(name){
+  document.querySelectorAll('.tb').forEach((b,i)=>b.classList.toggle('on',TABS[i]===name));
+  document.querySelectorAll('.tc').forEach(c=>c.classList.remove('on'));document.getElementById('tab-'+name).classList.add('on');
+  curTab=name;loadTab(name);
+}
+async function loadTab(name){
+  if(name==='overview')return;
+  if(name==='economics'){renderEconomics();return;}
+  if(!isPro){renderGate(name);return;}
+  if(loaded[name])return;
+  loaded[name]=true;
+  if(name==='marketing'){await loadMarketing();return;}
+  showTLoad(name);
+  try{const data=await fetchMod(name);rData[name]=data;renderMod(name,data);}
+  catch(e){document.getElementById('tab-'+name).innerHTML=`<div class="errbox">⚠️ ${e.message||'Failed.'}<br><small>Check API credits at console.anthropic.com</small></div>`;delete loaded[name];}
+}
+function showTLoad(n){
+  const label=PROXY_URL?'Perplexity → DeepSeek → Claude':'Claude Haiku + Web Search';
+  document.getElementById('tab-'+n).innerHTML=`<div class="tload"><div class="tspin"></div><div style="font-size:11px;color:var(--mut)">Researching via ${label}...</div></div>`;
+}
+function renderGate(name){
+  const labs={competitors:'Competitor Analysis',personas:'Customer Personas',marketing:'Marketing Research',statemap:'India State Map',schemes:'Govt Scheme Finder',platforms:'Platform Fit Score',pitchdeck:'Pitch Deck Generator',suppliers:'Supplier Sourcing',verdict:'Investment Verdict'};
+  document.getElementById('tab-'+name).innerHTML=`<div class="progate"><div class="pgi">🔒</div><div class="pgt">${labs[name]} — Pro Feature</div><div class="pgd">₹999/month unlocks all 11 research modules. Less than one consultant hour.</div><button class="pgbtn" onclick="showPricingModal()">See Plans & Pricing →</button></div>`;
+}
+function renderMod(n,d){({competitors:renderCompetitors,personas:renderPersonas,suppliers:renderSuppliers,verdict:renderVerdict,statemap:renderStatemap,schemes:renderSchemes,platforms:renderPlatforms,pitchdeck:renderPitchdeck})[n]?.(d);}
+
+// UNIT ECONOMICS
+function renderEconomics(){
+  const ov=rData.overview||{},prof=ov.profitability||{};
+  let defPrice=999,defCOGS=400;
+  const gm=(prof.gross_margin_range||'').match(/(\d+)/);
+  if(gm)defCOGS=Math.round(defPrice*(1-parseInt(gm[1])/100));
+  document.getElementById('tab-economics').innerHTML=`
+<div class="sec">
+  <div class="sh"><div class="si" style="background:rgba(0,229,160,.14)">🧮</div><div class="st">Unit Economics Calculator</div></div>
+  <p style="font-size:13px;color:var(--mut);margin-bottom:18px;line-height:1.65;">Pre-filled with market averages from your research. Adjust sliders to model your specific scenario in real time.</p>
+  <div class="calc-grid">
+    <div class="calc-inputs">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--mut);margin-bottom:16px;">INPUT VARIABLES</div>
+      ${mkSlider('sellingPrice','Selling Price (₹)',defPrice,100,5000,50)}
+      ${mkSlider('cogsPrice','COGS — Product Cost (₹)',defCOGS,50,3000,10)}
+      ${mkSlider('shippingCost','Shipping + Packaging (₹)',80,0,500,5)}
+      ${mkSlider('platformFee','Platform Fee (%)',2,0,30,0.5,'%')}
+      ${mkSlider('cacVal','Customer Acquisition Cost — CAC (₹)',500,0,3000,25)}
+      ${mkSlider('monthlyUnits','Monthly Sales Target (units)',100,1,1000,5,'u')}
+      ${mkSlider('fixedCosts','Monthly Fixed Costs (₹)',30000,0,200000,1000)}
+    </div>
+    <div class="calc-outputs" id="calcOutputs"></div>
+  </div>
+  <div class="calc-insight" id="calcInsight"></div>
+</div>`;
+  ['sellingPrice','cogsPrice','shippingCost','platformFee','cacVal','monthlyUnits','fixedCosts'].forEach(id=>{
+    const s=document.getElementById('cslider_'+id),n=document.getElementById('cnum_'+id);
+    if(s)s.addEventListener('input',()=>{if(n)n.value=s.value;calcUpdate();});
+    if(n)n.addEventListener('input',()=>{if(s)s.value=n.value;calcUpdate();});
+  });
+  calcUpdate();
+}
+function mkSlider(id,label,def,min,max,step,unit='₹'){
+  const fmt=v=>unit==='%'?v+'%':unit==='u'?v+' units':'₹'+parseFloat(v).toLocaleString('en-IN');
+  return`<div class="calc-grp">
+    <div class="calc-lbl"><span>${label}</span><span class="calc-val" id="clbl_${id}">${fmt(def)}</span></div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <input type="range" class="calc-slider" id="cslider_${id}" min="${min}" max="${max}" step="${step}" value="${def}" style="flex:1">
+      <input type="number" id="cnum_${id}" value="${def}" min="${min}" max="${max}" step="${step}" style="width:80px;background:var(--sur3);border:1px solid var(--bdr);border-radius:7px;padding:5px 8px;color:var(--txt);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;text-align:right;">
+    </div>
+  </div>`;
+}
+function calcUpdate(){
+  const g=id=>parseFloat(document.getElementById('cslider_'+id)?.value||0);
+  const P=g('sellingPrice'),C=g('cogsPrice'),Sh=g('shippingCost'),PF=g('platformFee'),CAC=g('cacVal'),Units=g('monthlyUnits'),Fixed=g('fixedCosts');
+  const fmt=v=>v<0?'-₹'+Math.abs(Math.round(v)).toLocaleString('en-IN'):'₹'+Math.round(v).toLocaleString('en-IN');
+  const fmtP=v=>(v<0?'':'+')+(v).toFixed(1)+'%';
+  // Update labels
+  const lset=(id,v,u='₹')=>{const el=document.getElementById('clbl_'+id);if(el)el.textContent=u==='%'?v+'%':u==='u'?v+' units':'₹'+parseFloat(v).toLocaleString('en-IN');};
+  lset('sellingPrice',P);lset('cogsPrice',C);lset('shippingCost',Sh);lset('platformFee',PF,'%');lset('cacVal',CAC);lset('monthlyUnits',Units,'u');lset('fixedCosts',Fixed);
+  const pfAmt=P*(PF/100),grossP=P-C-Sh-pfAmt,gm=P>0?(grossP/P)*100:0;
+  const contribM=grossP-CAC,netM=P>0?(contribM/P)*100:0;
+  const rev=P*Units,monthlyProfit=contribM*Units-Fixed;
+  const beGross=grossP>0?Math.ceil(Fixed/grossP):999,beFull=contribM>0?Math.ceil(Fixed/contribM):999;
+  const ltv=contribM*3,cacLtv=CAC>0?(ltv/CAC).toFixed(1):'∞';
+  const gC=v=>v>30?'green':v>15?'yellow':'red';
+  const color=v=>v>30?'var(--grn)':v>15?'var(--ind)':'var(--ruby)';
+  document.getElementById('calcOutputs').innerHTML=`
+    <div class="kpi-card ${gC(gm)}"><div class="kpi-lbl">GROSS MARGIN %</div><div class="kpi-val" style="color:${color(gm)}">${gm.toFixed(1)}%</div><div class="kpi-sub">After COGS, shipping, platform fee</div><div class="health-meter"><div class="health-fill" style="width:${Math.min(100,gm)}%;background:${color(gm)}"></div></div></div>
+    <div class="kpi-card ${gC(netM)}"><div class="kpi-lbl">NET MARGIN % (After CAC)</div><div class="kpi-val" style="color:${netM>20?'var(--grn)':netM>0?'var(--ind)':'var(--ruby)'}">${fmtP(netM)}</div><div class="kpi-sub">Contribution per unit after acquisition</div></div>
+    <div class="kpi-card purple"><div class="kpi-lbl">MONTHLY REVENUE</div><div class="kpi-val" style="color:var(--acc)">${fmt(rev)}</div><div class="kpi-sub">At ${Units} units/month</div></div>
+    <div class="kpi-card ${monthlyProfit>0?'green':'red'}"><div class="kpi-lbl">MONTHLY PROFIT/LOSS</div><div class="kpi-val" style="color:${monthlyProfit>0?'var(--grn)':'var(--ruby)'}">${fmt(monthlyProfit)}</div><div class="kpi-sub">After all costs + CAC + fixed</div></div>
+    <div class="kpi-card yellow"><div class="kpi-lbl">BREAKEVEN (Gross)</div><div class="kpi-val" style="color:var(--ind)">${Math.min(beGross,500)}${beGross>500?'+':''} <span style="font-size:12px">units/mo</span></div><div class="kpi-sub">To cover fixed costs — no CAC</div></div>
+    <div class="kpi-card yellow"><div class="kpi-lbl">BREAKEVEN (With CAC)</div><div class="kpi-val" style="color:var(--ind)">${Math.min(beFull,999)}${beFull>999?'+':''} <span style="font-size:12px">units/mo</span></div><div class="kpi-sub">Real breakeven including acquisition cost</div></div>
+    <div class="kpi-card ${parseFloat(cacLtv)>=3?'green':parseFloat(cacLtv)>=1?'yellow':'red'}"><div class="kpi-lbl">LTV : CAC RATIO</div><div class="kpi-val" style="color:${parseFloat(cacLtv)>=3?'var(--grn)':parseFloat(cacLtv)>=1?'var(--ind)':'var(--ruby)'}">${cacLtv}x</div><div class="kpi-sub">Target ≥ 3x for healthy business</div></div>
+    <div class="kpi-card purple"><div class="kpi-lbl">REQUIRED ROAS</div><div class="kpi-val" style="color:var(--acc)">${CAC>0&&P>0?(P/(CAC*0.5)).toFixed(1):'∞'}x</div><div class="kpi-sub">Return on ad spend to break even</div></div>`;
+  let ico='✅',txt='',clr='var(--grn)';
+  if(gm<20){ico='🚨';clr='var(--ruby)';txt=`Gross margin of ${gm.toFixed(1)}% is dangerously thin. Raise your price, cut COGS, or reduce shipping before scaling ad spend.`;}
+  else if(monthlyProfit<0){ico='⚠️';clr='var(--org)';txt=`Profitable per unit but not at ${Units} units/month. You need at least ${beFull} units to break even. Focus on customer acquisition first.`;}
+  else if(parseFloat(cacLtv)<1){ico='⚠️';clr='var(--org)';txt=`LTV:CAC below 1x — you spend more acquiring customers than you earn from them. Cut CAC via organic/referral before scaling paid ads.`;}
+  else if(parseFloat(cacLtv)>=3&&monthlyProfit>0){txt=`Strong unit economics. LTV:CAC of ${cacLtv}x means every ₹1 in acquisition returns ₹${cacLtv} in contribution. Scale the acquisition channel confidently.`;}
+  else{ico='📊';clr='var(--ind)';txt=`Workable but not exceptional. Get LTV:CAC to ≥3x before committing to paid scale. Focus on reducing CAC through organic content and referrals.`;}
+  document.getElementById('calcInsight').innerHTML=`<div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:${clr};margin-bottom:8px;">VERDICT</div><div style="font-size:14px;line-height:1.7;">${ico} ${txt}</div>`;
+}
+
+// MARKETING TAB
+async function loadMarketing(){
+  const tab=document.getElementById('tab-marketing');
+  tab.innerHTML=`
+    <div class="sec" style="margin-bottom:14px;"><div class="sh"><div class="si" style="background:rgba(124,92,252,.13)">📈</div><div class="st">Marketing Research</div></div><p style="font-size:14px;color:var(--mut)">Ad copy, keyword strategy, and real Google Trends data.</p></div>
+    <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:18px 22px;border-bottom:1px solid var(--bdr);"><div class="si" style="background:rgba(124,92,252,.14)">📣</div><div><div class="st">Ad Copy</div><div style="font-size:13px;color:var(--mut)">Meta + Google ads ready to launch</div></div></div>
+      <div id="mkt-adcopy" style="padding:20px;"><div class="tload"><div class="tspin"></div><div style="font-size:13px;color:var(--mut)">Generating ad copy...</div></div></div>
+    </div>
+    <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:18px 22px;border-bottom:1px solid var(--bdr);"><div class="si" style="background:rgba(0,214,143,.14)">🔑</div><div><div class="st">Keyword Intelligence</div><div style="font-size:13px;color:var(--mut)">SEO + Google Ads keywords with intent & CPC</div></div></div>
+      <div id="mkt-keywords" style="padding:20px;"><div class="tload"><div class="tspin"></div><div style="font-size:13px;color:var(--mut)">Fetching keywords...</div></div></div>
+    </div>
+    <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;">
+      <div style="display:flex;align-items:center;gap:10px;padding:18px 22px;border-bottom:1px solid var(--bdr);"><div class="si" style="background:rgba(255,153,51,.14)">📊</div><div><div class="st">Google Trends — India</div><div style="font-size:13px;color:var(--mut)">Real 12-month interest & breakout queries</div></div></div>
+      <div id="mkt-trends" style="padding:20px;">${SKEY?`<div class="tload"><div class="tspin"></div><div style="font-size:13px;color:var(--mut)">Fetching real trends...</div></div>`:`<div style="text-align:center;padding:28px;"><div style="font-size:20px;margin-bottom:8px">📈</div><div style="font-weight:700;margin-bottom:6px">Add SerpAPI key for real Trends data</div><div style="font-size:13px;color:var(--mut);margin-bottom:14px">100 free searches/month — paste key in the banner above.</div><a href="https://serpapi.com/" target="_blank" style="background:linear-gradient(135deg,var(--grn),#00A86B);border:none;border-radius:9px;padding:10px 20px;color:#000;font-weight:700;font-size:13px;text-decoration:none;">Get Free SerpAPI Key →</a></div>`}</div>
+    </div>`;
+  const [ad,kw]=await Promise.allSettled([fetchMod('adcopy'),fetchMod('keywords')]);
+  if(ad.status==='fulfilled'){rData.adcopy=ad.value;renderAdCopy(ad.value,document.getElementById('mkt-adcopy'));}
+  else{document.getElementById('mkt-adcopy').innerHTML=`<div class="errbox" style="margin:0">⚠️ ${ad.reason?.message||'Ad copy failed'}</div>`;delete loaded.marketing;}
+  if(kw.status==='fulfilled'){rData.keywords=kw.value;renderKeywords(kw.value,document.getElementById('mkt-keywords'));if(SKEY||PROXY_URL)fetchTrends(document.getElementById('mkt-trends'));}
+  else document.getElementById('mkt-keywords').innerHTML=`<div class="errbox" style="margin:0">⚠️ ${kw.reason?.message||'Keywords failed'}</div>`;
+}
+function renderAdCopy(d,el){
+  if(!d||(!d.meta_ads&&!d.google_ads)){el.innerHTML='<div class="errbox" style="margin:0">No ad data.</div>';return;}
+  const meta=(d.meta_ads||[]).map(a=>`<div class="adcard"><button class="cpybtn" onclick="copyText(${JSON.stringify((a.hook+'\n\n'+a.body+'\n\n'+a.cta))},this)">Copy</button><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px;"><span class="apill" style="background:rgba(124,92,252,.15);border:1px solid rgba(124,92,252,.2);color:var(--acc)">📱 ${a.format||'Reel'}</span><span class="apill" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--grn)">${a.emotion||''}</span><span class="apill" style="background:rgba(255,170,51,.1);border:1px solid rgba(255,170,51,.2);color:var(--ind)">👤 ${a.persona||''}</span></div><div class="adhook">${a.hook||'—'}</div><div class="adbody">${a.body||'—'}</div><span class="adcta">${a.cta||'Learn More'}</span></div>`).join('');
+  const google=(d.google_ads||[]).map(a=>`<div class="gad"><button class="cpybtn" onclick="copyText(${JSON.stringify(a.headline1+' | '+a.headline2+' | '+a.headline3+'\n'+a.description1+'\n'+a.description2)},this)">Copy</button><div class="gaurl">${a.display_url||''}</div><div class="gah">${a.headline1||'—'} | ${a.headline2||'—'} | ${a.headline3||'—'}</div><div class="gadesc">${a.description1||'—'}</div><div class="gadesc" style="color:var(--mut)">${a.description2||'—'}</div><div class="gakws">${(a.keywords||[]).map(k=>`<span>${k}</span>`).join('')}</div></div>`).join('');
+  el.innerHTML=`<div style="display:flex;gap:5px;margin-bottom:12px;"><button class="atab on" id="at_meta" onclick="swAdTab('meta')">📱 Meta (${(d.meta_ads||[]).length})</button><button class="atab" id="at_google" onclick="swAdTab('google')">🔍 Google (${(d.google_ads||[]).length})</button></div><div id="adtc_meta">${meta}</div><div id="adtc_google" style="display:none">${google}</div>`;
+}
+function swAdTab(name){
+  ['meta','google'].forEach(n=>{document.getElementById('at_'+n)?.classList.toggle('on',n===name);const el=document.getElementById('adtc_'+n);if(el)el.style.display=n===name?'block':'none';});
+}
+function renderKeywords(d,el){
+  if(!d||!d.keywords){el.innerHTML='<div class="errbox" style="margin:0">No keyword data.</div>';return;}
+  const dC={'Low':'dl','Medium':'dm','High':'dh'},iC={'Commercial':'ic','Informational':'ii','Transactional':'it','Navigational':'in2'};
+  const clusters=(d.content_clusters||[]).map(c=>`<span style="display:inline-block;padding:5px 13px;background:rgba(124,92,252,.1);border:1px solid rgba(124,92,252,.2);border-radius:10px;font-size:13px;margin:3px;">${c}</span>`).join('');
+  const rows=(d.keywords||[]).map(k=>`<tr><td style="font-weight:600">${k.keyword}</td><td><span class="ibadge ${iC[k.intent]||'ic'}">${k.intent}</span></td><td style="font-family:JetBrains Mono,monospace;font-size:13px">${k.monthly_volume||'—'}</td><td><div class="vbar"><div class="vbi" style="width:${k.volume_pct||50}%"></div></div></td><td style="font-family:JetBrains Mono,monospace;font-size:13px;color:var(--grn)">${k.cpc||'—'}</td><td><span class="diffdot ${dC[k.difficulty]||'dm'}"></span>${k.difficulty||'—'}</td><td style="font-size:13px;color:var(--mut);max-width:180px">${k.content_angle||'—'}</td></tr>`).join('');
+  el.innerHTML=`<div style="font-size:14px;line-height:1.75;margin-bottom:12px">${d.top_insight||''}</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mut);letter-spacing:1px;margin-bottom:8px">CONTENT CLUSTERS</div><div style="margin-bottom:16px">${clusters}</div><div style="overflow-x:auto"><table class="kwtbl"><thead><tr><th>KEYWORD</th><th>INTENT</th><th>VOL/MO</th><th>REL.</th><th>CPC</th><th>DIFFICULTY</th><th>CONTENT ANGLE</th></tr></thead><tbody>${rows}</tbody></table></div><div style="font-size:12px;color:var(--mut);margin-top:8px;font-style:italic">⚠️ Volume & CPC are AI estimates. Real trend data via SerpAPI below.</div>`;
+}
+async function fetchTrends(el){
+  try{
+    // Use proxy /api/trends if available — avoids CORS on SerpAPI direct calls
+    let data;
+    if(PROXY_URL){
+      const r=await fetch(`${PROXY_URL}/api/trends?q=${encodeURIComponent(curProd)}`);
+      if(!r.ok)throw new Error(`Proxy trends error ${r.status}`);
+      data=await r.json();
+    } else {
+      if(!SKEY)throw new Error('No SerpAPI key');
+      const r=await fetch(`https://serpapi.com/search.json?engine=google_trends&q=${encodeURIComponent(curProd)}&geo=IN&date=today+12-m&api_key=${SKEY}`);
+      if(!r.ok)throw new Error(`SerpAPI error ${r.status}`);
+      data=await r.json();
+    }
+    const tl=data?.interest_over_time?.timeline_data||[],rising=data?.related_queries?.rising||[],top=data?.related_queries?.top||[];
+    if(!tl.length)throw new Error('No trend data');
+    const pts=tl.map(t=>({date:t.date?.split(' ')[0]||'',val:t.values?.[0]?.extracted_value||0}));
+    const maxV=Math.max(...pts.map(p=>p.val),1),W=560,H=80;
+    const sp=pts.map((p,i)=>`${Math.round((i/(pts.length-1||1))*W)},${Math.round(H-(p.val/maxV)*H)}`).join(' ');
+    const fp=`0,${H} ${sp} ${W},${H}`;
+    const recent=pts.slice(-4).reduce((a,b)=>a+b.val,0)/4,older=pts.slice(0,4).reduce((a,b)=>a+b.val,0)/4;
+    const pct=Math.round(((recent-older)/Math.max(older,1))*100);
+    const dir=pct>10?'📈 Rising':pct<-10?'📉 Declining':'➡️ Stable';
+    const dc=pct>10?'var(--grn)':pct<-10?'var(--org)':'var(--ind)';
+    const peak=pts.reduce((a,b)=>a.val>b.val?a:b),cur=pts[pts.length-1]||{};
+    const rh=rising.slice(0,6).map(q=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--sur2);border-radius:8px;border:1px solid var(--bdr);margin-bottom:6px"><span style="font-size:13px">${q.query}</span><span style="font-family:JetBrains Mono,monospace;font-size:10px;padding:2px 8px;border-radius:5px;background:rgba(0,214,143,.1);color:var(--grn)">${q.value==='Breakout'?'🚀 Breakout':'+'+q.value+'%'}</span></div>`).join('');
+    const th=top.slice(0,6).map(q=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--sur2);border-radius:8px;border:1px solid var(--bdr);margin-bottom:6px"><span style="font-size:13px">${q.query}</span><div style="width:70px;height:5px;background:var(--sur);border-radius:3px;overflow:hidden"><div style="height:100%;width:${q.extracted_value||50}%;background:linear-gradient(90deg,var(--acc),var(--grn))"></div></div></div>`).join('');
+    el.innerHTML=`<div style="background:${dc}11;border:1px solid ${dc}33;border-radius:12px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><div><div style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--mut);margin-bottom:4px">12-MONTH TREND · INDIA</div><div style="font-weight:800;font-size:20px;color:${dc}">${dir} ${pct>0?'+':''}${pct}%</div></div><div style="display:flex;gap:12px"><div style="text-align:center;background:var(--sur2);border-radius:10px;padding:10px 14px;border:1px solid var(--bdr)"><div style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--mut);margin-bottom:3px">PEAK</div><div style="font-weight:800;font-size:18px;color:var(--ind)">${peak.val}/100</div><div style="font-size:11px;color:var(--mut)">${peak.date}</div></div><div style="text-align:center;background:var(--sur2);border-radius:10px;padding:10px 14px;border:1px solid var(--bdr)"><div style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--mut);margin-bottom:3px">NOW</div><div style="font-weight:800;font-size:18px;color:var(--acc)">${cur.val}/100</div></div></div></div>
+    <div style="margin-bottom:16px"><div style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--mut);letter-spacing:1px;margin-bottom:10px">INTEREST OVER TIME — INDIA (REAL GOOGLE DATA)</div><svg width="100%" viewBox="0 0 ${W} ${H+28}" style="overflow:visible;display:block"><defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7C5CFC" stop-opacity="0.28"/><stop offset="100%" stop-color="#7C5CFC" stop-opacity="0"/></linearGradient></defs><polygon points="${fp}" fill="url(#tg)"/><polyline points="${sp}" fill="none" stroke="#7C5CFC" stroke-width="2.5" stroke-linejoin="round"/><text x="0" y="${H+22}" style="font-family:JetBrains Mono,monospace;font-size:9px;fill:rgba(107,101,133,.8)">${pts[0]?.date||''}</text><text x="${W}" y="${H+22}" text-anchor="end" style="font-family:JetBrains Mono,monospace;font-size:9px;fill:rgba(107,101,133,.8)">${pts[pts.length-1]?.date||''}</text><text x="${W}" y="12" text-anchor="end" style="font-family:JetBrains Mono,monospace;font-size:9px;fill:rgba(107,101,133,.5)">Source: Google Trends via SerpAPI · IN</text></svg></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px"><div><div style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--grn);letter-spacing:1px;margin-bottom:10px">🚀 BREAKOUT QUERIES</div>${rh||'<div style="font-size:13px;color:var(--mut);text-align:center;padding:16px">None this period</div>'}</div><div><div style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--acc);letter-spacing:1px;margin-bottom:10px">🔝 TOP RELATED SEARCHES</div>${th||'<div style="font-size:13px;color:var(--mut);text-align:center;padding:16px">None found</div>'}</div></div>`;
+  }catch(err){el.innerHTML=`<div class="errbox" style="margin:0">⚠️ Google Trends: ${err.message}<br><span style="font-size:12px">Check SerpAPI key · 100 free/month</span></div>`;}
+}
+
+// ═══════════════════════════════════════════════════
+// COST-OPTIMIZED API ENGINE  v4
+// — When PROXY_URL is set: all calls go through the backend
+//   (full Perplexity → DeepSeek → Claude pipeline, CORS solved)
+// — When no proxy: direct Claude calls with Haiku routing + capped searches
+// ═══════════════════════════════════════════════════
+
+const MDL_HAIKU  = 'claude-haiku-4-5-20251001';
+const MDL_SONNET = 'claude-sonnet-4-20250514';
+
+// Pipeline cost rates
+const RATES = {
+  [MDL_SONNET]:            { in: 3/1e6,    out: 15/1e6  },
+  [MDL_HAIKU]:             { in: 0.80/1e6, out: 4/1e6   },
+  'perplexity-sonar':      { in: 0,        out: 5/1e3   }, // ~$5/1000 requests flat
+  'deepseek-chat':         { in: 0.14/1e6, out: 0.28/1e6}
+};
+
+let sessionCost = { calls:0, estUSD:0 };
+function trackCost(model, inputTok, outputTok, pipeline=''){
+  const rate = RATES[model] || RATES[MDL_HAIKU];
+  let cost = inputTok*rate.in + outputTok*rate.out;
+  if(pipeline==='full'||pipeline==='perplexity-claude') cost += RATES['perplexity-sonar'].out; // flat per call
+  sessionCost.calls++;
+  sessionCost.estUSD += cost;
+  const el=document.getElementById('costTracker');
+  if(el) el.textContent=`~$${sessionCost.estUSD.toFixed(4)} · ${sessionCost.calls} calls`;
+}
+
+// ── VIA PROXY ─────────────────────────────────────────────────────────────────
+async function callViaProxy(sys, msg, tier, maxTok){
+  const r = await fetch(`${PROXY_URL}/api/research`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sys, msg, tier, maxTok })
+  });
+  if(!r.ok){ const e=await r.json().catch(()=>({})); throw new Error(e?.error||`Proxy HTTP ${r.status}`); }
+  const d = await r.json();
+  // Update cost tracker with real usage from server
+  const usage = d.usage || {};
+  trackCost(d.model||MDL_HAIKU, usage.input_tokens||1000, usage.output_tokens||(maxTok*0.5), d.pipeline||'');
+  // Update pipeline badge to reflect what the server actually used
+  updatePipelineBadge(d.pipeline==='full'?'full-pipeline':d.pipeline==='perplexity-claude'?'perplexity-claude':'claude-only');
+  return d.data;
+}
+
+// ── DIRECT CLAUDE (fallback / no proxy) ───────────────────────────────────────
+async function callDirect(sys, msg, tier, maxTok){
+  if(!AKEY) throw new Error('No Anthropic API key. Add it in the banner above.');
+  const model = (tier==='sonnet' && isPro) ? MDL_SONNET : MDL_HAIKU;
+  const body = {
+    model, max_tokens: maxTok, system: sys,
+    messages: [{ role:'user', content:msg }],
+    tools: [{ type:'web_search_20250305', name:'web_search', max_uses:4 }]
+  };
+  const r = await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{ 'Content-Type':'application/json','x-api-key':AKEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true' },
+    body: JSON.stringify(body)
+  });
+  if(!r.ok){ const e=await r.json().catch(()=>({})); throw new Error(e?.error?.message||`HTTP ${r.status}`); }
+  const d = await r.json();
+  const usage = d.usage||{};
+  trackCost(model, usage.input_tokens||2000, usage.output_tokens||(maxTok*0.6), 'claude-only');
+  let raw='';
+  for(const b of (d.content||[])) if(b.type==='text') raw+=b.text;
+  raw=raw.replace(/```json/g,'').replace(/```/g,'').trim();
+  let best=null,depth=0,start=-1;
+  for(let i=raw.length-1;i>=0;i--){
+    if(raw[i]==='}'){if(depth===0)start=i;depth++;}
+    else if(raw[i]==='{'){depth--;if(depth===0&&start!==-1){best=raw.substring(i,start+1);break;}}
+  }
+  if(!best){const si=raw.indexOf('{'),ei=raw.lastIndexOf('}');if(si!==-1&&ei!==-1)best=raw.substring(si,ei+1);}
+  return JSON.parse(best);
+}
+
+// ── MASTER callAPI ─────────────────────────────────────────────────────────────
+async function callAPI(sys, msg, tier='haiku', maxTok=2000){
+  return PROXY_URL ? callViaProxy(sys,msg,tier,maxTok) : callDirect(sys,msg,tier,maxTok);
+}
+
+async function fetchMod(name){
+  // tier: 'sonnet' = Pro users get Sonnet, free gets Haiku
+  //        'haiku'  = always Haiku regardless of plan
+  // maxTok: tuned per module — don't over-allocate
+  const cfg = {
+    competitors: { sys:SYS_COMPETITORS, msg:`Top 5 real competitors for "${curProd}" in India. Cite sources. Return only JSON.`,             tier:'sonnet', maxTok:2500 },
+    personas:    { sys:SYS_PERSONAS,    msg:`3 Indian customer personas for "${curProd}". Return only JSON.`,                                tier:'haiku',  maxTok:2000 },
+    adcopy:      { sys:SYS_ADCOPY,      msg:`Meta and Google ads for "${curProd}" India D2C brand. Return only JSON.`,                      tier:'haiku',  maxTok:1800 },
+    keywords:    { sys:SYS_KEYWORDS,    msg:`Top 18 SEO/Ads keywords for "${curProd}" India. Return only JSON.`,                            tier:'haiku',  maxTok:1800 },
+    suppliers:   { sys:SYS_SUPPLIERS,   msg:`Top Indian suppliers for "${curProd}". Return only JSON.`,                                     tier:'haiku',  maxTok:1800 },
+    verdict:     { sys:SYS_VERDICT,     msg:`Investment verdict for "${curProd}" India. Context: ${rData.overview?.executive_summary||''}. Return only JSON.`, tier:'sonnet', maxTok:2500 },
+    statemap:    { sys:SYS_STATEMAP,    msg:`Best Indian states to launch "${curProd}". Return only JSON.`,                                 tier:'haiku',  maxTok:1800 },
+    schemes:     { sys:SYS_SCHEMES,     msg:`Active government schemes for "${curProd}" startup India. Return only JSON.`,                  tier:'haiku',  maxTok:1800 },
+    platforms:   { sys:SYS_PLATFORMS,   msg:`Best D2C platforms for "${curProd}" India with current fees. Return only JSON.`,              tier:'haiku',  maxTok:1800 },
+    pitchdeck:   { sys:SYS_PITCHDECK,   msg:`10-slide pitch deck for "${curProd}" India startup. Context: ${rData.overview?.executive_summary||''}. Return only JSON.`, tier:'sonnet', maxTok:2500 }
+  };
+  const c = cfg[name]; if(!c) throw new Error('Unknown module');
+  return callAPI(c.sys, c.msg, c.tier, c.maxTok);
+}
+
+// SEARCH
+function qs(p){document.getElementById('prod').value=p;run();}
+document.getElementById('prod').addEventListener('keydown',e=>{if(e.key==='Enter')run();});
+function animS(ids,iv){
+  ids.forEach(id=>{const el=document.getElementById(id);if(el){el.className='ls';el.querySelector('.sd').style.background='var(--bdr)';}});
+  if(ids[0]&&document.getElementById(ids[0]))document.getElementById(ids[0]).className='ls act';
+  let i=1;return setInterval(()=>{if(i<=ids.length){if(i>0&&ids[i-1]){const p=document.getElementById(ids[i-1]);if(p){p.className='ls dn';p.querySelector('.sd').style.background='var(--grn)';}}if(i<ids.length&&ids[i])document.getElementById(ids[i]).className='ls act';i++;}},iv);
+}
+function markDone(ids){ids.forEach(id=>{const el=document.getElementById(id);if(el){el.className='ls dn';el.querySelector('.sd').style.background='var(--grn)';}});}
+
+async function run(){
+  const prod=document.getElementById('prod').value.trim();if(!prod){alert('Enter a product.');return;}
+  const kf=document.getElementById('apiKey').value.trim();if(kf.startsWith('sk-ant-'))AKEY=kf;
+  if(!AKEY&&!PROXY_URL){alert('Add your Anthropic API key OR connect a Proxy URL in the banner above.');return;}
+  if(!checkGate())return;
+  curProd=prod;rData={};loaded={};rCount++;localStorage.setItem('mm_cnt',rCount);updatePlanBadge();
+  // Reset session cost tracker
+  sessionCost={calls:0,estUSD:0};
+  const ct=document.getElementById('costTracker');if(ct){ct.style.display='inline-block';ct.textContent='~$0.0000 · 0 calls';}
+  // Set loading step labels based on active mode
+  if(PROXY_URL){
+    document.getElementById('s1txt').textContent='Stage 1 · Perplexity searching live web...';
+    document.getElementById('s2txt').textContent='Stage 2 · DeepSeek structuring data...';
+  }else{
+    document.getElementById('s1txt').textContent='Claude searching live market reports...';
+    document.getElementById('s2txt').textContent='Analyzing India market size & CAGR...';
+  }
+  document.getElementById('goBtn').disabled=true;document.getElementById('loading').style.display='block';document.getElementById('results').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+  const iv=animS(['s1','s2','s3','s4'],5500);
+  try{
+    const data=await callAPI(SYS_OVERVIEW,`Research: "${prod}". Find real India + global market data with cited sources. Return only JSON.`,'sonnet',2800);
+    clearInterval(iv);markDone(['s1','s2','s3','s4']);
+    rData.overview=data;loaded.overview=true;saveToHist(prod,data);
+    document.getElementById('rProd').textContent=data.product||prod;document.getElementById('rCat').textContent=data.category||'';
+    renderOverview(data);swTabById('overview');
+    document.getElementById('loading').style.display='none';document.getElementById('results').style.display='block';document.getElementById('expBtn').style.display='inline-flex';
+    setTimeout(()=>window.scrollTo({top:document.getElementById('results').offsetTop-20,behavior:'smooth'}),80);
+  }catch(e){
+    clearInterval(iv);document.getElementById('loading').style.display='none';document.getElementById('results').style.display='block';
+    document.getElementById('tab-overview').innerHTML=`<div class="errbox"><div style="font-size:24px;margin-bottom:8px">⚠️</div><strong>Research Failed</strong><br><span style="font-size:12px">${e.message||'Something went wrong.'}</span><br><div style="margin-top:10px;font-size:11px;opacity:.7">Check API key & account credits.</div></div>`;
+    swTabById('overview');
+  }
+  document.getElementById('goBtn').disabled=false;
+}
+function newSearch(){document.getElementById('results').style.display='none';document.getElementById('loading').style.display='none';document.getElementById('prod').value='';document.getElementById('expBtn').style.display='none';window.scrollTo({top:0,behavior:'smooth'});document.getElementById('prod').focus();}
+function copyText(txt,btn){navigator.clipboard.writeText(txt).then(()=>{const o=btn.textContent;btn.textContent='Copied!';setTimeout(()=>btn.textContent=o,1500);});}
+
+// RENDER OVERVIEW
+function renderOverview(r){
+  const vc={'STRONG BUY':'#00E5A0','BUY':'#7C5CFC','NEUTRAL':'#FFB347','RISKY':'#FF6B35','AVOID':'#FF4444'};
+  const vC=vc[r.investment_verdict]||'#7C5CFC',sC=r.investment_score>=7?'#00E5A0':r.investment_score>=5?'#7C5CFC':'#FF6B35';
+  const pains=(r.pain_points||[]).map((p,i)=>`<div class="pi"><div class="pn">P${i+1}</div><div><div class="ptl">${p.title}</div><div class="pds">${p.description}</div></div></div>`).join('');
+  const dos=(r.dos||[]).map(d=>`<li>${d}</li>`).join(''),donts=(r.donts||[]).map(d=>`<li>${d}</li>`).join('');
+  const diffs=(r.strategy?.differentiators||[]).map(d=>`<div style="background:var(--sur2);border-radius:8px;padding:10px;border:1px solid var(--bdr);font-size:11px;line-height:1.5"><span style="color:var(--grn)">✦ </span>${d}</div>`).join('');
+  const chs=(r.strategy?.channels||[]).map(c=>`<span style="display:inline-block;padding:4px 11px;background:rgba(124,92,252,.1);border:1px solid rgba(124,92,252,.2);border-radius:12px;font-size:10px;margin:3px">${c}</span>`).join('');
+  const iP=(r.india_market?.top_players||[]).map(p=>`<span style="font-size:10px;padding:2px 8px;background:rgba(255,153,51,.1);border:1px solid rgba(255,153,51,.2);border-radius:6px">${p}</span>`).join('');
+  const gP=(r.global_market?.top_players||[]).map(p=>`<span style="font-size:10px;padding:2px 8px;background:rgba(124,92,252,.1);border:1px solid rgba(124,92,252,.2);border-radius:6px">${p}</span>`).join('');
+  document.getElementById('tab-overview').innerHTML=`
+<div class="sban">
+  <div class="sc2 a"><div class="sclb">Investment Score</div><div class="scv" style="color:${sC};font-size:23px">${r.investment_score}<span style="font-size:11px;color:var(--mut)">/10</span></div><div style="display:inline-block;padding:2px 9px;background:${vC}22;border:1px solid ${vC}44;border-radius:9px;font-family:'JetBrains Mono',monospace;font-size:8px;color:${vC};margin-top:5px">${r.investment_verdict}</div></div>
+  <div class="sc2 b"><div class="sclb">India Market</div><div class="scv" style="color:var(--ind);font-size:17px">${r.india_market?.size_inr||r.india_market?.size_usd}</div><div class="scsub">${r.india_market?.cagr} CAGR · ${r.india_market?.maturity}</div></div>
+  <div class="sc2 c"><div class="sclb">Global Market</div><div class="scv" style="color:var(--acc);font-size:17px">${r.global_market?.size_usd}</div><div class="scsub">${r.global_market?.cagr} CAGR · ${r.global_market?.maturity}</div></div>
+  <div class="sc2 d"><div class="sclb">Gross Margin</div><div class="scv" style="color:var(--org);font-size:17px">${r.profitability?.gross_margin_range}</div><div class="scsub">Breakeven: ${r.profitability?.breakeven_timeline}</div></div>
+</div>
+<div class="vc"><div class="vl">AI Investment Verdict</div><div class="vt">${r.verdict_headline}</div><div style="font-size:12px;line-height:1.7;color:rgba(240,238,248,.8);margin-bottom:7px">${r.verdict_detail}</div><div style="font-size:12px;color:var(--mut);line-height:1.6">${r.executive_summary}</div></div>
+<div class="mg">
+  <div class="mc"><div class="mch"><span style="font-size:18px">🇮🇳</span><div class="mct">India Market</div></div><div class="msz" style="color:var(--ind)">${r.india_market?.size_inr||r.india_market?.size_usd}</div><div style="font-size:10px;color:var(--mut);margin-bottom:11px">${r.india_market?.size_usd} · ${r.india_market?.cagr_years}</div><div class="bbl"><span>CAGR</span><span style="color:var(--ind)">${r.india_market?.cagr}</span></div><div class="bbt"><div class="bbf ib" data-w="${r.india_market?.cagr_bar_percent||60}"></div></div><div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--mut);margin:9px 0 6px;letter-spacing:1px">KEY DRIVERS</div>${(r.india_market?.key_drivers||[]).map(d=>`<div style="font-size:11px;padding:3px 0;border-bottom:1px solid var(--bdr);color:rgba(240,238,248,.8)">→ ${d}</div>`).join('')}<div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--mut);margin:9px 0 6px;letter-spacing:1px">TOP PLAYERS</div><div style="display:flex;flex-wrap:wrap;gap:4px">${iP}</div></div>
+  <div class="mc"><div class="mch"><span style="font-size:18px">🌍</span><div class="mct">Global Market</div></div><div class="msz" style="color:var(--acc)">${r.global_market?.size_usd}</div><div style="font-size:10px;color:var(--mut);margin-bottom:11px">${r.global_market?.cagr_years}</div><div class="bbl"><span>CAGR</span><span style="color:var(--acc)">${r.global_market?.cagr}</span></div><div class="bbt"><div class="bbf gb" data-w="${r.global_market?.cagr_bar_percent||45}"></div></div><div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--mut);margin:9px 0 6px;letter-spacing:1px">KEY DRIVERS</div>${(r.global_market?.key_drivers||[]).map(d=>`<div style="font-size:11px;padding:3px 0;border-bottom:1px solid var(--bdr);color:rgba(240,238,248,.8)">→ ${d}</div>`).join('')}<div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--mut);margin:9px 0 6px;letter-spacing:1px">TOP PLAYERS</div><div style="display:flex;flex-wrap:wrap;gap:4px">${gP}</div></div>
+</div>
+<div class="sec"><div class="sh"><div class="si" style="background:rgba(124,92,252,.14)">🎯</div><div class="st">Go-To-Market Strategy</div></div>
+  <div style="margin-bottom:11px"><div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--mut);letter-spacing:1px;margin-bottom:5px">POSITIONING</div><div style="font-size:13px;font-style:italic;color:var(--grn)">"${r.strategy?.positioning}"</div></div>
+  <div style="margin-bottom:11px"><div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--mut);letter-spacing:1px;margin-bottom:6px">CHANNELS</div>${chs}</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:11px">
+    <div style="background:var(--sur2);border-radius:9px;padding:11px;border:1px solid var(--bdr)"><div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--grn);margin-bottom:5px">PHASE 1 · 0-6M</div><div style="font-size:11px;line-height:1.5">${r.strategy?.phase1}</div></div>
+    <div style="background:var(--sur2);border-radius:9px;padding:11px;border:1px solid var(--bdr)"><div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--acc);margin-bottom:5px">PHASE 2 · 6-18M</div><div style="font-size:11px;line-height:1.5">${r.strategy?.phase2}</div></div>
+    <div style="background:var(--sur2);border-radius:9px;padding:11px;border:1px solid var(--bdr)"><div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--ind);margin-bottom:5px">PHASE 3 · 18M+</div><div style="font-size:11px;line-height:1.5">${r.strategy?.phase3}</div></div>
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--mut);letter-spacing:1px;margin-bottom:8px">DIFFERENTIATORS</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px">${diffs}</div>
+</div>
+<div class="sec"><div class="sh"><div class="si" style="background:rgba(255,107,53,.14)">🔥</div><div class="st">Pain Points to Target</div></div><div class="pg2">${pains}</div></div>
+<div class="sec"><div class="sh"><div class="si" style="background:rgba(0,229,160,.14)">💰</div><div class="st">Profitability Analysis</div></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:11px">
+    <div style="background:var(--sur2);border-radius:9px;padding:12px;text-align:center;border:1px solid rgba(0,229,160,.12)"><div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--mut);margin-bottom:4px">GROSS MARGIN</div><div style="font-weight:800;font-size:18px;color:var(--grn)">${r.profitability?.gross_margin_range}</div></div>
+    <div style="background:var(--sur2);border-radius:9px;padding:12px;text-align:center;border:1px solid rgba(0,229,160,.12)"><div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--mut);margin-bottom:4px">EBITDA RANGE</div><div style="font-weight:800;font-size:18px;color:var(--grn)">${r.profitability?.ebitda_range}</div></div>
+    <div style="background:var(--sur2);border-radius:9px;padding:12px;text-align:center;border:1px solid rgba(0,229,160,.12)"><div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--mut);margin-bottom:4px">CAPEX LEVEL</div><div style="font-weight:800;font-size:18px;color:var(--grn)">${r.profitability?.capex_level}</div></div>
+  </div>
+  <div style="font-size:12px;line-height:1.7;color:rgba(240,238,248,.8)">${r.profitability?.analysis}</div>
+</div>
+<div class="sec"><div class="sh"><div class="si" style="background:rgba(124,92,252,.14)">⚖️</div><div class="st">Do's & Don'ts</div></div>
+  <div class="dd"><div class="dc"><div class="clh">✓ What To Do</div><ul class="il">${dos}</ul></div><div class="nc"><div class="clh">✕ What Not To Do</div><ul class="il">${donts}</ul></div></div>
+</div>`;
+  setTimeout(()=>document.querySelectorAll('.bbf').forEach(b=>b.style.width=(b.dataset.w||50)+'%'),200);
+}
+
+// RENDER COMPETITORS
+function renderCompetitors(d){
+  const comps=(d.competitors||[]).map(c=>`<div class="cc"><div class="cch"><div><div class="ccn">${c.name}</div><div class="ccpos">${c.positioning}</div></div><div class="ccsh">${c.market_share||'—'}</div></div><div class="cmeta"><span>📅 ${c.founded||'—'}</span><span>💰 ${c.revenue_estimate||'—'}</span><span>💲 ${c.price_point||'—'}</span></div><div class="ccbody"><div><div class="cslb">STRENGTHS</div><div class="cs">${(c.strengths||[]).map(s=>`<div class="cit">${s}</div>`).join('')}</div></div><div><div class="cslb">WEAKNESSES</div><div class="cw">${(c.weaknesses||[]).map(w=>`<div class="cit">${w}</div>`).join('')}</div></div><div><div class="cslb">YOUR OPPORTUNITY</div><div class="cgap">${c.gap_to_exploit||'—'}</div></div></div></div>`).join('');
+  document.getElementById('tab-competitors').innerHTML=`<div class="sec"><div class="sh"><div class="si" style="background:rgba(255,153,51,.14)">💡</div><div class="st">Market Gap & Entry Strategy</div></div><div style="font-size:13px;line-height:1.7;margin-bottom:8px;color:rgba(240,238,248,.85)">${d.market_gap||'—'}</div><div style="font-size:13px;line-height:1.7;color:rgba(240,238,248,.7);border-top:1px solid var(--bdr);padding-top:8px">${d.entry_strategy||'—'}</div></div><div class="cg">${comps}</div>`;
+}
+
+// RENDER PERSONAS
+function renderPersonas(d){
+  const cards=(d.personas||[]).map(p=>`<div class="percard"><div class="perav" style="background:${p.avatar_color||'#7C5CFC'}22;color:${p.avatar_color||'#7C5CFC'}">${p.avatar_letters||'??'}</div><div class="pername">${p.name}</div><div class="perrole">${p.occupation} · ${p.city}</div><div class="perstat"><span class="pssl">Age</span><strong>${p.age_range}</strong></div><div class="perstat"><span class="pssl">Income</span><strong>${p.income}</strong></div><div class="perstat"><span class="pssl">Decision time</span><strong>${p.decision_time||'—'}</strong></div><div class="persl">PAIN POINTS</div><div class="pertags">${(p.pain_points||[]).map(t=>`<span class="pertag">${t}</span>`).join('')}</div><div class="persl">BUYING TRIGGERS</div><div class="pertags">${(p.buying_triggers||[]).map(t=>`<span class="pertag" style="border-color:rgba(0,229,160,.2);color:var(--grn)">${t}</span>`).join('')}</div><div class="persl">CHANNELS</div><div class="pertags">${(p.channels||[]).map(t=>`<span class="pertag" style="border-color:rgba(124,92,252,.2);color:var(--acc)">${t}</span>`).join('')}</div><div class="perq">"${p.quote}"</div><div class="wtpl">Willingness to Pay</div><div class="wtp">${p.wtp}</div></div>`).join('');
+  document.getElementById('tab-personas').innerHTML=`<div class="pergrid">${cards}</div>`;
+}
+
+// RENDER SUPPLIERS
+function renderSuppliers(d){
+  const sups=(d.suppliers||[]).map(s=>`<div class="supc"><div class="suph"><div><div class="supn">${s.name}</div><div class="supl">📍 ${s.location} · ${s.type}</div></div><div class="supt">${s.type}</div></div><div class="supmeta"><div class="smi">Speciality: <strong>${s.speciality}</strong></div><div class="smi">MOQ: <strong>${s.moq}</strong></div><div class="smi">Contact: <strong>${s.contact}</strong></div><div class="smi">Notes: <strong>${s.notes||'—'}</strong></div></div><div class="scerts">${(s.certifications||[]).map(c=>`<span class="scert">${c}</span>`).join('')}</div></div>`).join('');
+  const hubs=(d.hubs||[]).map((h,i)=>`<div class="hubrow"><div class="hubnum">HUB ${i+1}</div><div>${h}</div></div>`).join('');
+  const certs=(d.certifications_needed||[]).map(c=>`<span style="font-size:10px;padding:3px 10px;background:rgba(255,107,53,.08);border:1px solid rgba(255,107,53,.15);border-radius:6px;color:var(--org)">${c}</span>`).join('');
+  document.getElementById('tab-suppliers').innerHTML=`<div class="sec"><div class="sh"><div class="si" style="background:rgba(255,153,51,.14)">📦</div><div class="st">Sourcing Overview</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px"><div><div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--mut);letter-spacing:1px;margin-bottom:5px">EST. COGS</div><div style="font-weight:800;font-size:20px;color:var(--grn)">${d.est_cogs||'—'}</div></div><div><div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--mut);letter-spacing:1px;margin-bottom:5px">CERTIFICATIONS</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px">${certs}</div></div></div><div style="font-size:12px;line-height:1.7;color:rgba(240,238,248,.8)">${d.sourcing_tips||'—'}</div></div><div class="sec"><div class="sh"><div class="si" style="background:rgba(255,153,51,.14)">🗺️</div><div class="st">Key Sourcing Hubs</div></div><div class="subhub">${hubs}</div></div><div class="sec"><div class="sh"><div class="si" style="background:rgba(124,92,252,.14)">🏭</div><div class="st">Top Suppliers</div></div><div class="supg">${sups}</div></div>`;
+}
+
+// RENDER STATE MAP
+function renderStatemap(d){
+  if(!d){document.getElementById('tab-statemap').innerHTML='<div class="errbox">No state data.</div>';return;}
+  const hotSet=new Set((d.top_states||[]).map(s=>s.state));
+  const avoidSet=new Set((d.avoid_states||[]).map(s=>s.split('—')[0].trim().split(' ')[0]));
+  const regions={'North India':['Delhi','Uttar Pradesh','Haryana','Punjab','Rajasthan','Himachal Pradesh','Uttarakhand'],'West India':['Maharashtra','Gujarat','Goa','Madhya Pradesh'],'South India':['Karnataka','Tamil Nadu','Telangana','Andhra Pradesh','Kerala'],'East India':['West Bengal','Bihar','Odisha','Jharkhand','Assam']};
+  const getTile=s=>{
+    const cls=hotSet.has(s)?'hot':avoidSet.has(s)?'avoid':(d.top_states||[]).some(t=>s.includes(t.state.split(' ')[0]))?'warm':'cold';
+    const lbl=hotSet.has(s)?'⭐ Launch':avoidSet.has(s)?'⚠️ Avoid':'—';
+    return`<div class="state-tile ${cls}">${s}<div class="state-score-lbl">${lbl}</div></div>`;
+  };
+  const topCards=(d.top_states||[]).map((s,i)=>{
+    const c=s.score>=8?'var(--grn)':s.score>=6?'var(--ind)':'var(--org)';
+    return`<div style="background:var(--sur2);border:1px solid var(--bdr);border-radius:14px;padding:18px;border-left:3px solid ${c}"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div><div style="font-weight:800;font-size:15px">#${i+1} ${s.state}</div><div style="font-size:12px;color:var(--mut)">${s.city||''} · ${s.market_size||''}</div></div><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:800;color:${c}">${s.score}/10</div></div><div style="height:4px;background:var(--sur3);border-radius:2px;margin-bottom:10px;overflow:hidden"><div style="height:100%;width:${s.score*10}%;background:${c};border-radius:2px;transition:width 1s ease"></div></div><div style="font-size:13px;color:rgba(240,238,248,.8);line-height:1.6;margin-bottom:8px">${s.reason||''}</div><div style="display:flex;gap:6px;flex-wrap:wrap">${(s.channels||[]).map(c=>`<span style="font-size:10px;padding:2px 8px;background:rgba(139,111,255,.1);border:1px solid rgba(139,111,255,.2);border-radius:5px;color:var(--acc)">${c}</span>`).join('')}</div></div>`;
+  }).join('');
+  const mapRegions=Object.entries(regions).map(([r,states])=>`<div class="state-region"><div class="region-hdr">${r}</div><div class="state-grid">${states.map(getTile).join('')}</div></div>`).join('');
+  document.getElementById('tab-statemap').innerHTML=`
+<div class="vc" style="margin-bottom:16px"><div class="vl">Launch Strategy</div><div class="vt" style="font-size:20px">${d.launch_sequence||'Validate in top state first, then expand.'}</div><div style="font-size:13px;color:rgba(240,238,248,.75)">${d.state_insight||''}</div></div>
+<div class="sec"><div class="sh"><div class="si" style="background:rgba(0,229,160,.14)">🏆</div><div class="st">Top 5 States to Launch In</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">${topCards}</div></div>
+<div class="sec"><div class="sh"><div class="si" style="background:rgba(139,111,255,.14)">🗺️</div><div class="st">India State Heat Map</div></div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;font-size:12px">
+    <span>🟢 Launch here</span><span>🟡 Consider later</span><span>⚫ Low priority</span><span>🔴 Avoid initially</span>
+  </div>
+  ${mapRegions}
+</div>
+<div class="sec"><div class="sh"><div class="si" style="background:rgba(255,170,51,.14)">🏙️</div><div class="st">Tier 2 City Opportunity</div></div><div style="font-size:13px;line-height:1.7;color:rgba(240,238,248,.85);background:var(--sur2);padding:14px;border-radius:10px;border:1px solid var(--bdr)">${d.tier2_opportunity||'—'}</div></div>`;
+}
+
+// RENDER SCHEMES
+function renderSchemes(d){
+  if(!d){document.getElementById('tab-schemes').innerHTML='<div class="errbox">No scheme data.</div>';return;}
+  const cards=(d.schemes||[]).map(s=>`<div class="scheme-card"><div class="scheme-hdr"><div><div class="scheme-name">${s.name}</div><div class="scheme-ministry">${s.ministry}</div></div><span class="rel-badge rel-${s.relevance||'MEDIUM'}">${s.relevance||'MEDIUM'}</span></div><div style="font-size:13px;color:rgba(139,111,255,.9);font-style:italic;margin-bottom:8px">${s.relevance_reason||''}</div><div style="background:rgba(0,229,160,.05);border:1px solid rgba(0,229,160,.15);border-radius:8px;padding:12px;font-size:13px;line-height:1.65;margin-bottom:10px">💰 ${s.benefit}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px"><div><span style="color:var(--mut)">Eligibility: </span>${s.eligibility||'—'}</div><div><span style="color:var(--mut)">Portal: </span><a href="https://${s.link||'#'}" target="_blank" style="color:var(--grn);text-decoration:none">${s.link||'—'}</a></div></div><div style="margin-top:10px;font-size:13px;color:rgba(240,238,248,.75);background:rgba(255,255,255,.03);border-radius:8px;padding:10px">→ ${s.how_to_apply||'Check official portal'}</div></div>`).join('');
+  const regs=(d.registrations_needed||[]).map(r=>`<div style="background:var(--sur2);border:1px solid var(--bdr);border-radius:12px;padding:14px;display:flex;gap:12px"><div style="font-size:20px">📋</div><div><div style="font-weight:700;font-size:14px;margin-bottom:3px">${r.name}</div><div style="font-size:12px;color:var(--mut)">${r.for||''} · <span style="color:var(--grn)">${r.cost||''}</span> · Timeline: ${r.timeline||'—'}</div></div></div>`).join('');
+  document.getElementById('tab-schemes').innerHTML=`
+<div class="vc" style="margin-bottom:16px"><div class="vl">Priority Action</div><div class="vt" style="font-size:18px">${d.priority_action||'Register on Startup India portal first.'}</div><div style="font-size:13px;color:var(--grn);margin-top:4px">Total potential savings: ${d.total_potential_savings||'varies'}</div></div>
+<div class="sec"><div class="sh"><div class="si" style="background:rgba(0,229,160,.14)">🏛️</div><div class="st">Matching Government Schemes</div></div>${cards}</div>
+<div class="sec"><div class="sh"><div class="si" style="background:rgba(255,170,51,.14)">📋</div><div class="st">Mandatory Registrations</div></div><div style="display:flex;flex-direction:column;gap:8px">${regs}</div></div>`;
+}
+
+// RENDER PLATFORMS
+function renderPlatforms(d){
+  if(!d){document.getElementById('tab-platforms').innerHTML='<div class="errbox">No platform data.</div>';return;}
+  const sc=s=>s>=7?'score-high':s>=5?'score-mid':'score-low';
+  const bc=s=>s>=7?'var(--grn)':s>=5?'var(--ind)':'var(--mut)';
+  const cards=(d.platforms||[]).map(p=>`<div class="plat-card ${p.name===d.top_recommendation?'top-plat':''}">${p.name===d.top_recommendation?`<div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--grn);letter-spacing:1.5px;margin-bottom:8px">⭐ TOP PICK</div>`:''}<div class="plat-hdr"><div><div class="plat-name">${p.name}</div><div style="font-size:11px;color:var(--mut)">${p.fit||''} fit · Setup: ${p.estimated_setup_time||''}</div></div><div class="plat-score-badge ${sc(p.score||5)}">${p.score||5}</div></div><div class="plat-bar"><div class="plat-fill" data-w="${(p.score||5)*10}" style="width:0%;background:${bc(p.score||5)}"></div></div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mut);margin-bottom:6px">${p.monthly_fee||''} · Commission: ${p.commission||''}</div><div style="font-size:13px;color:rgba(240,238,248,.8);line-height:1.6;margin-bottom:8px">${p.why||''}</div><div style="display:flex;flex-direction:column;gap:4px">${(p.pros||[]).slice(0,3).map(pr=>`<div style="font-size:12px;display:flex;gap:6px"><span style="color:var(--grn)">→</span>${pr}</div>`).join('')}</div></div>`).join('');
+  const cl=(d.checklist_90_days||[]).map(w=>`<div class="checklist-week"><div class="checklist-week-hdr">${w.week}</div>${(w.tasks||[]).map(t=>`<div class="check-item"><span style="color:var(--mut);flex-shrink:0">☐</span> ${t}</div>`).join('')}</div>`).join('');
+  document.getElementById('tab-platforms').innerHTML=`
+<div class="vc" style="margin-bottom:16px"><div class="vl">Platform Recommendation</div><div class="vt" style="font-size:20px">Start with ${d.top_recommendation||'Shopify'}</div><div style="font-size:13px;color:rgba(240,238,248,.75);margin-bottom:6px">${d.top_reason||''}</div><div style="font-size:13px;color:var(--ind)">Recommended stack: ${d.platform_stack||'—'}</div></div>
+<div class="sec"><div class="sh"><div class="si" style="background:rgba(139,111,255,.14)">📦</div><div class="st">Platform Fit Scores</div></div><div class="plat-grid">${cards}</div></div>
+<div class="sec"><div class="sh"><div class="si" style="background:rgba(0,229,160,.14)">📅</div><div class="st">90-Day Launch Checklist — ${d.top_recommendation||''}</div></div><div style="font-size:13px;color:var(--grn);margin-bottom:14px">🎯 Month 1 target: ${d.first_month_target||'First 50 orders'}</div>${cl}</div>`;
+  setTimeout(()=>document.querySelectorAll('.plat-fill').forEach(el=>{const w=el.dataset.w;el.style.width='0%';setTimeout(()=>el.style.width=w+'%',100);}),100);
+}
+
+// RENDER PITCH DECK
+function renderPitchdeck(d){
+  if(!d){document.getElementById('tab-pitchdeck').innerHTML='<div class="errbox">No pitch deck data.</div>';return;}
+  const icons=['🔥','📊','💡','📱','💰','🚀','⚔️','📣','👥','🎯'];
+  const accs=['var(--org)','var(--ind)','var(--acc)','var(--grn)','var(--gold)','var(--acc)','var(--ruby)','var(--grn)','var(--mut)','var(--gold)'];
+  const slides=(d.slides||[]).map((s,i)=>`<div class="pitch-slide"><div class="pitch-num">${s.number||i+1}</div><div style="flex:1"><div class="pitch-title">${icons[i]||'📋'} ${s.title||'—'}</div><div class="pitch-headline" style="color:${accs[i]||'var(--acc)'}">"${s.headline||''}"</div><div style="font-size:13px;color:rgba(240,238,248,.75);line-height:1.65;margin-bottom:8px">${s.body||''}</div><div>${(s.key_stats||[]).map(st=>`<span class="pitch-stat">${st}</span>`).join('')}</div>${s.visual_suggestion?`<div style="font-size:11px;color:var(--mut);margin-top:6px;font-style:italic">💡 Visual: ${s.visual_suggestion}</div>`:''}</div></div>`).join('');
+  const funds=(d.use_of_funds||[]).map(f=>`<div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--bdr);font-size:13px"><span style="color:var(--grn);flex-shrink:0">→</span>${f}</div>`).join('');
+  document.getElementById('tab-pitchdeck').innerHTML=`
+<div class="sec" style="margin-bottom:16px"><div class="sh"><div class="si" style="background:rgba(139,111,255,.14)">🎯</div><div class="st">${d.deck_title||curProd} — Investor Pitch Deck</div></div>
+  <div style="font-size:15px;font-style:italic;color:var(--grn);margin-bottom:12px">"${d.tagline||''}"</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+    <div style="background:var(--sur2);border-radius:12px;padding:16px;border:1px solid rgba(255,215,0,.2)"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--gold);margin-bottom:5px">FUNDING ASK</div><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:24px;color:var(--gold)">${d.ask||'—'}</div>${funds}</div>
+    <div style="background:var(--sur2);border-radius:12px;padding:16px;border:1px solid rgba(139,111,255,.2)"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--acc);margin-bottom:8px">ELEVATOR PITCH</div><div style="font-size:13px;line-height:1.75;font-style:italic;color:rgba(240,238,248,.88)">"${d.elevator_pitch||''}"</div></div>
+  </div>
+  <button onclick="openPitchDeck()" style="background:linear-gradient(135deg,var(--acc),#5B3FD4);border:none;border-radius:11px;padding:12px 24px;color:#fff;font-weight:800;font-size:13px;cursor:pointer;margin-right:8px">🖥️ Open Full Slide Deck →</button>
+  <span style="font-size:12px;color:var(--mut)">Opens print-ready deck in new window</span>
+</div>
+<div class="sec"><div class="sh"><div class="si" style="background:rgba(0,229,160,.14)">📋</div><div class="st">Slide Preview</div></div>${slides}</div>`;
+}
+
+function openPitchDeck(){
+  const d=rData.pitchdeck;if(!d){alert('Pitch deck not loaded.');return;}
+  const icons=['🔥','📊','💡','📱','💰','🚀','⚔️','📣','👥','🎯'];
+  const hexAccs=['#FF6B35','#FFAA33','#8B6FFF','#00E5A0','#FFD700','#8B6FFF','#FF4466','#00E5A0','#6A6590','#FFD700'];
+  const sHTML=(d.slides||[]).map((s,i)=>`<div style="page-break-before:${i?'always':'auto'};min-height:210mm;display:flex;flex-direction:column;justify-content:center;padding:50px 60px;background:#0A0A18;position:relative"><div style="position:absolute;top:0;left:0;right:0;height:4px;background:${hexAccs[i]||'#8B6FFF'}"></div><div style="position:absolute;top:22px;right:28px;font-family:monospace;font-size:10px;color:rgba(255,255,255,.2)">SLIDE ${s.number||i+1} / ${(d.slides||[]).length}</div><div style="position:absolute;bottom:22px;left:28px;font-family:monospace;font-size:9px;color:rgba(255,255,255,.2)">${d.deck_title||curProd} · Confidential</div><div style="font-family:monospace;font-size:11px;letter-spacing:3px;color:${hexAccs[i]||'#8B6FFF'};margin-bottom:16px;text-transform:uppercase">${icons[i]||'•'} ${s.title||'—'}</div><div style="font-family:Georgia,serif;font-size:30px;font-weight:700;line-height:1.2;color:#fff;margin-bottom:20px;max-width:680px">${s.headline||''}</div><div style="font-size:16px;line-height:1.8;color:rgba(255,255,255,.75);max-width:640px;margin-bottom:24px">${s.body||''}</div>${(s.key_stats||[]).length?`<div style="display:flex;gap:12px;flex-wrap:wrap">${s.key_stats.map(st=>`<div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:10px 18px;font-size:13px;color:#fff">${st}</div>`).join('')}</div>`:''}</div>`).join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${d.deck_title||curProd}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0A0A18;font-family:'Segoe UI',system-ui,sans-serif}@page{size:A4 landscape;margin:0}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body>
+<div style="min-height:210mm;display:flex;flex-direction:column;justify-content:center;padding:50px 60px;background:linear-gradient(135deg,#0A0A18,#12122A)"><div style="font-family:monospace;font-size:12px;letter-spacing:4px;color:rgba(139,111,255,.8);margin-bottom:20px">INVESTOR PRESENTATION · CONFIDENTIAL</div><div style="font-family:Georgia,serif;font-size:50px;font-weight:700;color:#fff;margin-bottom:16px">${d.deck_title||curProd}</div><div style="font-size:20px;color:rgba(0,229,160,.9);font-style:italic;margin-bottom:28px">"${d.tagline||''}"</div><div style="font-size:16px;color:rgba(255,255,255,.5)">${new Date().toLocaleDateString('en-IN',{month:'long',year:'numeric'})}</div></div>
+${sHTML}<script>window.onload=function(){window.print()}<\/script></body></html>`;
+  const w=window.open('','_blank','width=1000,height=750');if(!w){alert('Pop-ups blocked.');return;}w.document.write(html);w.document.close();
+}
+
+// RENDER VERDICT
+function renderVerdict(d){
+  if(!d){document.getElementById('tab-verdict').innerHTML='<div class="errbox">No verdict data.</div>';return;}
+  const vC={'YES':'var(--grn)','NO':'var(--ruby)','CONDITIONAL YES':'var(--ind)'}[d.verdict]||'var(--acc)';
+  const risks=(d.risk_factors||[]).map(r=>{const sc={'HIGH':'var(--ruby)','MEDIUM':'var(--ind)','LOW':'var(--grn)'}[r.severity]||'var(--mut)';return`<div style="background:var(--sur2);border:1px solid var(--bdr);border-radius:12px;padding:14px;margin-bottom:8px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:9px;padding:2px 8px;border-radius:5px;background:${sc}18;border:1px solid ${sc}44;color:${sc};font-family:'JetBrains Mono',monospace">${r.severity}</span><span style="font-weight:700;font-size:14px">${r.risk}</span></div><div style="font-size:13px;color:rgba(240,236,255,.75);line-height:1.6">→ ${r.mitigation}</div></div>`;}).join('');
+  const matrix=(d.decision_matrix||[]).map(f=>{const pct=Math.round((f.score/f.max)*100),mc=pct>=70?'var(--grn)':pct>=50?'var(--ind)':'var(--org)';return`<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:13px;font-weight:600">${f.factor}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:${mc}">${f.score}/${f.max}</span></div><div style="height:6px;background:var(--sur2);border-radius:3px;overflow:hidden;margin-bottom:4px"><div style="height:100%;width:${pct}%;background:${mc};border-radius:3px;transition:width 1.2s ease"></div></div><div style="font-size:11px;color:var(--mut)">${f.note||''}</div></div>`;}).join('');
+  const breakdown=(d.investment_needed?.breakdown||[]).map(b=>`<div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--bdr);font-size:13px"><span style="color:var(--grn);flex-shrink:0">→</span>${b}</div>`).join('');
+  const plan=(d.six_month_plan||[]).map((p,i)=>{const pc=['var(--grn)','var(--acc)','var(--ind)'][i]||'var(--acc)';return`<div style="background:var(--sur2);border:1px solid var(--bdr);border-radius:14px;padding:18px;border-top:3px solid ${pc}"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:${pc};letter-spacing:1px;margin-bottom:5px">${p.month}</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:5px">${p.focus}</div><div style="font-size:12px;color:var(--grn);margin-bottom:10px">🎯 ${p.target}</div>${(p.actions||[]).map(a=>`<div style="font-size:12px;color:rgba(240,236,255,.8);padding:4px 0;display:flex;gap:7px"><span style="color:${pc};flex-shrink:0">→</span>${a}</div>`).join('')}</div>`;}).join('');
+  const ss=d.start_small||{};
+  document.getElementById('tab-verdict').innerHTML=`
+<div style="background:linear-gradient(135deg,${vC}15,${vC}05);border:2px solid ${vC}44;border-radius:22px;padding:32px;margin-bottom:16px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:72px;font-weight:900;color:${vC};line-height:1;margin-bottom:10px;text-shadow:0 0 60px ${vC}44">${d.verdict}</div><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;margin-bottom:12px">${d.verdict_headline}</div><div style="font-size:14px;color:rgba(240,236,255,.75);line-height:1.75;max-width:640px;margin:0 auto">${d.verdict_reasoning}</div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+  <div class="sec" style="margin-bottom:0"><div class="sh"><div class="si" style="background:rgba(0,229,160,.14)">💰</div><div class="st">Investment Required</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px"><div style="background:var(--sur2);border-radius:11px;padding:14px;text-align:center;border:1px solid rgba(0,229,160,.15)"><div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--mut);margin-bottom:5px">MINIMUM</div><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--grn)">${d.investment_needed?.minimum_to_start||'—'}</div></div><div style="background:var(--sur2);border-radius:11px;padding:14px;text-align:center;border:1px solid rgba(139,111,255,.15)"><div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--mut);margin-bottom:5px">COMFORTABLE</div><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--acc)">${d.investment_needed?.comfortable_start||'—'}</div></div></div>${breakdown}<div style="font-size:11px;color:var(--mut);margin-top:8px;font-style:italic">${d.investment_needed?.source_note||''}</div></div>
+  <div class="sec" style="margin-bottom:0"><div class="sh"><div class="si" style="background:rgba(255,170,51,.14)">📊</div><div class="st">Decision Matrix</div></div>${matrix}</div>
+</div>
+<div class="sec"><div class="sh"><div class="si" style="background:rgba(0,229,160,.14)">🚀</div><div class="st">Start Small — First 30 Days</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${[['First Product/SKU','first_product','var(--grn)'],['First Channel','first_channel','var(--acc)'],['First 10 Customers','first_10_customers','var(--ind)'],['Unit Economics Check','unit_economics_check','var(--org)']].map(([lbl,key,c])=>`<div style="background:var(--sur2);border-radius:12px;padding:14px;border:1px solid var(--bdr);border-left:3px solid ${c}"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:${c};letter-spacing:1px;margin-bottom:6px">${lbl.toUpperCase()}</div><div style="font-size:13px;line-height:1.65;color:rgba(240,236,255,.88)">${ss[key]||'—'}</div></div>`).join('')}</div>${ss.week1_to_month1?`<div style="margin-top:12px;background:rgba(139,111,255,.07);border:1px solid rgba(139,111,255,.15);border-radius:12px;padding:14px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--acc);letter-spacing:1px;margin-bottom:6px">WEEK 1–MONTH 1 ROADMAP</div><div style="font-size:13px;line-height:1.7">${ss.week1_to_month1}</div></div>`:''}</div>
+<div class="sec"><div class="sh"><div class="si" style="background:rgba(139,111,255,.14)">📅</div><div class="st">6-Month Execution Plan</div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px">${plan}</div></div>
+<div class="sec"><div class="sh"><div class="si" style="background:rgba(255,68,102,.14)">⚠️</div><div class="st">Risk Factors</div></div>${risks}</div>
+<div style="background:linear-gradient(135deg,rgba(139,111,255,.1),rgba(0,229,160,.06));border:1px solid rgba(139,111,255,.22);border-radius:16px;padding:22px;margin-bottom:14px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--acc);letter-spacing:2px;margin-bottom:10px">FINAL WORD</div><div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700;line-height:1.6;font-style:italic">"${d.final_word||''}"</div></div>`;
+  setTimeout(()=>document.querySelectorAll('#tab-verdict [data-w]').forEach(el=>{el.style.width='0%';setTimeout(()=>el.style.width=(el.dataset.w||'0')+'%',50);}),100);
+}
+
+// PDF
+function doPDF(){
+  const r=rData.overview;if(!r){alert('Run a report first.');return;}
+  const vc={'STRONG BUY':'#0a7a4a','BUY':'#5B3FD4','NEUTRAL':'#b35e00','RISKY':'#c0390a','AVOID':'#991111'};
+  const vC=vc[r.investment_verdict]||'#5B3FD4';
+  const now=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+  const ver=rData.verdict,comp=rData.competitors,kw=rData.keywords;
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>MarketMind — ${curProd}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',system-ui,sans-serif;background:#fff;color:#1a1a2e;font-size:13px;line-height:1.5}@page{margin:18mm 16mm;size:A4}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}.ph{background:linear-gradient(135deg,#1a1a2e,#2d2b5e);color:#fff;padding:24px 28px;margin-bottom:28px}.sec{margin-bottom:28px;page-break-inside:avoid}.sh{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #e8e4f8;font-size:16px;font-weight:700;color:#1a1a2e}.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #ece9f8;font-size:13px}</style></head><body>
+<div class="ph"><div style="display:flex;justify-content:space-between"><div><div style="font-size:11px;letter-spacing:3px;opacity:.6;margin-bottom:6px;font-family:monospace">MARKETMIND AI · REPORT</div><h1 style="font-size:22px;font-weight:800">${curProd}</h1><p style="font-size:12px;opacity:.7">${r.category||''} · ${now}</p></div><div style="text-align:right"><div style="font-size:36px;font-weight:900;color:${vC}">${r.investment_score}/10</div><div style="font-size:11px;opacity:.7">${r.investment_verdict}</div></div></div></div>
+<div style="padding:0 28px">
+<div class="sec"><div class="sh">📊 Overview</div><p style="font-size:13px;line-height:1.7;color:#333;margin-bottom:12px">${r.executive_summary}</p><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px"><div style="text-align:center;background:#f0eeff;border-radius:8px;padding:12px"><div style="font-size:10px;color:#666;margin-bottom:4px;font-family:monospace">SCORE</div><div style="font-size:22px;font-weight:800;color:${vC}">${r.investment_score}/10</div></div><div style="text-align:center;background:#fff8ee;border-radius:8px;padding:12px"><div style="font-size:10px;color:#666;margin-bottom:4px;font-family:monospace">INDIA</div><div style="font-size:16px;font-weight:800;color:#b35e00">${r.india_market?.size_inr||r.india_market?.size_usd}</div></div><div style="text-align:center;background:#eef0ff;border-radius:8px;padding:12px"><div style="font-size:10px;color:#666;margin-bottom:4px;font-family:monospace">GLOBAL</div><div style="font-size:16px;font-weight:800;color:#3a3abf">${r.global_market?.size_usd}</div></div><div style="text-align:center;background:#fff0ee;border-radius:8px;padding:12px"><div style="font-size:10px;color:#666;margin-bottom:4px;font-family:monospace">MARGIN</div><div style="font-size:16px;font-weight:800;color:#c0390a">${r.profitability?.gross_margin_range}</div></div></div></div>
+${ver?`<div class="sec"><div class="sh">✅ Investment Verdict</div><div style="text-align:center;padding:20px;background:${ver.verdict==='YES'?'#e8f8ee':'#fde8e0'};border-radius:10px;margin-bottom:12px"><div style="font-size:48px;font-weight:900;color:${ver.verdict==='YES'?'#0a7a4a':'#c0390a'}">${ver.verdict}</div><div style="font-weight:700;font-size:15px;margin:8px 0">${ver.verdict_headline}</div><div style="font-size:13px;color:#444;line-height:1.7">${ver.verdict_reasoning}</div></div><div class="row"><span style="color:#666">Min. Investment</span><strong style="color:#0a7a4a">${ver.investment_needed?.minimum_to_start||'—'}</strong></div><div style="font-size:13px;font-style:italic;background:#f8f7ff;border-left:4px solid #7C5CFC;padding:12px;border-radius:0 8px 8px 0;color:#333;margin-top:12px">"${ver.final_word||''}"</div></div>`:''}
+${comp?`<div class="sec"><div class="sh">🔍 Competitors</div>${(comp.competitors||[]).map((c,i)=>`<div style="background:#f8f9ff;border:1px solid #d8dcf5;border-radius:10px;padding:14px;margin-bottom:10px"><div style="font-weight:800;font-size:14px">${i+1}. ${c.name} · ${c.revenue_estimate||''}</div><div style="background:#f0fff8;border:1px solid #a8e6c8;border-radius:6px;padding:8px;margin-top:8px;font-size:12px"><strong style="color:#0a7a4a">⚡ Gap: </strong>${c.gap_to_exploit||'—'}</div></div>`).join('')}</div>`:''}
+${kw?`<div class="sec"><div class="sh">🔑 Keywords</div><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr>${['Keyword','Intent','Volume','CPC','Difficulty'].map(h=>`<th style="text-align:left;padding:7px 10px;background:#f0eeff;border-bottom:2px solid #d4caf5;font-family:monospace;font-size:10px">${h}</th>`).join('')}</tr></thead><tbody>${(kw.keywords||[]).map((k,i)=>`<tr style="background:${i%2?'#faf9ff':'#fff'}"><td style="padding:7px 10px;font-weight:600">${k.keyword}</td><td style="padding:7px 10px">${k.intent}</td><td style="padding:7px 10px;font-family:monospace">${k.monthly_volume||'—'}</td><td style="padding:7px 10px;font-family:monospace;color:#0a7a4a">${k.cpc||'—'}</td><td style="padding:7px 10px">${k.difficulty||'—'}</td></tr>`).join('')}</tbody></table></div>`:''}
+<div style="text-align:center;font-size:10px;color:#aaa;padding:20px 0;border-top:1px solid #eee;font-family:monospace">MarketMind AI · Claude Sonnet + Live Web Search · ${now} · AI-synthesized. Validate before major decisions.</div>
+</div><script>window.onload=function(){window.print()}<\/script></body></html>`;
+  const w=window.open('','_blank','width=900,height=700');if(!w){alert('Pop-ups blocked.');return;}w.document.write(html);w.document.close();
+}
+
+// SYSTEM PROMPTS
+const SYS_OVERVIEW=`You are an elite market research analyst. Use web search extensively for REAL, CURRENT, CITED data.
+CRITICAL: Every market size figure MUST cite its actual source with year. Give confidence: HIGH/MEDIUM/LOW.
+Return ONLY a single valid JSON object:
+{"product":"","category":"","executive_summary":"2-3 sentences with cited facts","investment_score":7.5,"investment_verdict":"STRONG BUY",
+"india_market":{"size_usd":"","size_inr":"","cagr":"","cagr_years":"","cagr_bar_percent":70,"size_source":"IMARC Group 2024","size_confidence":"HIGH","cagr_source":"","cagr_confidence":"MEDIUM","key_drivers":["d1","d2","d3"],"top_players":["p1","p2","p3"],"maturity":"Growing"},
+"global_market":{"size_usd":"","cagr":"","cagr_years":"","cagr_bar_percent":50,"size_source":"","size_confidence":"HIGH","cagr_source":"","cagr_confidence":"MEDIUM","key_drivers":["d1","d2","d3"],"top_players":["p1","p2","p3"],"maturity":"Mature"},
+"profitability":{"gross_margin_range":"40-60%","gross_margin_mid":50,"ebitda_range":"","breakeven_timeline":"","capex_level":"Medium","margin_source":"","margin_confidence":"MEDIUM","analysis":"2-3 sentences"},
+"strategy":{"positioning":"","channels":["c1","c2","c3","c4"],"moat":"","phase1":"","phase2":"","phase3":"","differentiators":["d1","d2","d3"]},
+"pain_points":[{"title":"","description":""},{"title":"","description":""},{"title":"","description":""},{"title":"","description":""}],
+"dos":["do1","do2","do3","do4","do5"],"donts":["dont1","dont2","dont3","dont4","dont5"],
+"verdict_headline":"","verdict_detail":"2-3 sentences"}
+investment_verdict: STRONG BUY|BUY|NEUTRAL|RISKY|AVOID. Return ONLY the JSON.`;
+
+const SYS_COMPETITORS=`Competitive intelligence expert India. Use web search for REAL companies with REAL cited data.
+Return ONLY JSON:
+{"competitors":[{"name":"","founded":"","revenue_estimate":"₹X-Y Cr (Source: Tracxn 2024)","revenue_confidence":"HIGH|MEDIUM|LOW","market_share":"~X%","funding":"","price_point":"₹X-Y","positioning":"","distribution":"","strengths":["s1","s2","s3"],"weaknesses":["w1","w2","w3"],"gap_to_exploit":"specific actionable gap"}],
+"market_gap":"2 sentences","entry_strategy":"2-3 sentence strategy"}
+Return 5 real competitors. Return ONLY JSON.`;
+
+const SYS_PERSONAS=`Consumer research expert India. Use web search for REAL segment data.
+Return ONLY JSON:
+{"personas":[{"name":"Priya Sharma","avatar_letters":"PS","avatar_color":"#7C5CFC","segment_name":"","segment_size":"~12M people","age_range":"28-35","occupation":"","income":"₹8-15 LPA","city":"Mumbai/Bangalore","lifestyle":"2-3 sentence description","pain_points":["p1","p2","p3"],"buying_triggers":["t1","t2","t3"],"objections":["o1","o2"],"channels":["Instagram"],"quote":"A realistic quote","wtp":"₹X-Y","decision_time":"X days","data_sources":["Source 1"]}]}
+Return 3 real Indian consumer segments. Return ONLY JSON.`;
+
+const SYS_ADCOPY=`Performance marketing expert for Indian D2C brands.
+Return ONLY JSON with keys "meta_ads" (4 objects) and "google_ads" (4 objects).
+meta_ad: {"persona":"","hook":"Scroll-stopping first line","body":"2-3 compelling sentences.","cta":"","format":"Video Reel","emotion":"","objective":""}
+google_ad: {"headline1":"Max 30 chars","headline2":"Max 30 chars","headline3":"Max 30 chars","description1":"Max 90 chars","description2":"Max 90 chars","display_url":"brand.com/product","keywords":["kw1","kw2","kw3"]}
+Return ONLY JSON.`;
+
+const SYS_KEYWORDS=`SEO and Google Ads specialist India. Return ONLY JSON:
+{"keywords":[{"keyword":"","type":"","intent":"Commercial","monthly_volume":"40K","volume_pct":80,"competition":"High","difficulty":"High","cpc":"₹38","content_angle":""}],"top_insight":"","content_clusters":["c1","c2","c3"]}
+15-18 keywords. intent: Commercial|Informational|Transactional|Navigational. difficulty: Low|Medium|High. Return ONLY JSON.`;
+
+const SYS_SUPPLIERS=`Supply chain expert India. Return ONLY JSON:
+{"suppliers":[{"name":"","type":"Manufacturer","location":"City, State","speciality":"","moq":"","contact":"","certifications":["FSSAI"],"notes":""}],"hubs":["h1","h2","h3"],"certifications_needed":["c1","c2"],"est_cogs":"₹X-Y/unit","sourcing_tips":"2-3 practical tips."}
+5-6 suppliers. Return ONLY JSON.`;
+
+const SYS_VERDICT=`Senior venture analyst India. Be direct and honest. Use web search.
+Return ONLY JSON:
+{"verdict":"YES","verdict_score":8.5,"verdict_headline":"Bold direct sentence","verdict_reasoning":"3-4 sentences","verdict_conditions":["c1","c2"],"risk_factors":[{"risk":"","severity":"HIGH|MEDIUM|LOW","mitigation":""}],"investment_needed":{"minimum_to_start":"₹X L","comfortable_start":"₹X-Y L","breakdown":["₹X L — for what"],"source_note":""},"start_small":{"week1_to_month1":"exact first 4 weeks","first_product":"exact SKU","first_channel":"exact channel","first_10_customers":"specific tactic","unit_economics_check":"specific number"},"six_month_plan":[{"month":"Month 1-2","focus":"","target":"","actions":["a1","a2","a3"]}],"decision_matrix":[{"factor":"Market Size","score":8,"max":10,"note":""}],"final_word":"2-3 sentences direct advice"}
+Return ONLY JSON.`;
+
+const SYS_STATEMAP=`India market geographer. Use web search for real state-level consumer data.
+Return ONLY JSON:
+{"top_states":[{"state":"Maharashtra","score":9,"reason":"why — cite real data","city":"Mumbai","market_size":"~₹800Cr","channels":["D2C","Modern Trade"],"competition":"High"}],"avoid_states":["State — reason"],"tier2_opportunity":"Why Tier 2 matters and which specific cities","regional_analysis":{"north":"assessment","south":"assessment","west":"assessment","east":"assessment"},"launch_sequence":"First state, why, expansion order","state_insight":"Key strategic insight"}
+Return 5 top states. Return ONLY JSON.`;
+
+const SYS_SCHEMES=`India government scheme expert. Use web search for currently active schemes.
+Return ONLY JSON:
+{"schemes":[{"name":"Startup India Seed Fund","ministry":"DPIIT","benefit":"Up to ₹50L for PoC and market entry","eligibility":"DPIIT recognized startup < 2 years","how_to_apply":"Register on Startup India portal → apply to incubators","link":"startupindia.gov.in","relevance":"HIGH","relevance_reason":""}],"registrations_needed":[{"name":"FSSAI","for":"Food products","cost":"₹2,000-7,500","timeline":"15-30 days","link":"foscos.fssai.gov.in"}],"tax_benefits":["benefit1"],"total_potential_savings":"₹X L total","priority_action":"Most important first step"}
+5-7 real schemes. Return ONLY JSON.`;
+
+const SYS_PLATFORMS=`D2C platform strategy expert India. Use web search for current fees.
+Return ONLY JSON:
+{"platforms":[{"name":"Shopify","score":8,"fit":"HIGH","why":"","monthly_fee":"₹1,994/mo","commission":"0%","pros":["p1","p2","p3"],"cons":["c1","c2"],"best_for":"","estimated_setup_time":"2-3 days"},{"name":"Amazon India","score":7,"fit":"HIGH","why":"","monthly_fee":"₹999-3,999/mo","commission":"8-15%","pros":[],"cons":[],"best_for":"","estimated_setup_time":"3-5 days"},{"name":"Flipkart","score":6,"fit":"MEDIUM","why":"","monthly_fee":"Free","commission":"5-20%","pros":[],"cons":[],"best_for":"","estimated_setup_time":"2-3 days"},{"name":"Meesho","score":5,"fit":"MEDIUM","why":"","monthly_fee":"Free","commission":"0-1.8%","pros":[],"cons":[],"best_for":"","estimated_setup_time":"1-2 days"},{"name":"ONDC","score":6,"fit":"MEDIUM","why":"","monthly_fee":"varies","commission":"2-5%","pros":[],"cons":[],"best_for":"","estimated_setup_time":"7-14 days"}],
+"top_recommendation":"Shopify","top_reason":"","checklist_90_days":[{"week":"Week 1-2","tasks":["t1","t2","t3"]},{"week":"Week 3-4","tasks":[]},{"week":"Month 2","tasks":[]},{"week":"Month 3","tasks":[]}],"first_month_target":"","platform_stack":""}
+Return ONLY JSON.`;
+
+const SYS_PITCHDECK=`Startup pitch deck expert for Indian seed/angel rounds. 
+Return ONLY JSON:
+{"deck_title":"","tagline":"One-line pitch","slides":[{"number":1,"title":"The Problem","subtitle":"Why this matters","headline":"Bold statement","body":"2-3 sentences with data.","key_stats":["Stat 1","Stat 2"],"visual_suggestion":"chart type"},{"number":2,"title":"Market Size","subtitle":"TAM/SAM/SOM","headline":"","body":"","key_stats":["TAM: ₹X,000 Cr","SAM: ₹X00 Cr","SOM: ₹X0 Cr"],"visual_suggestion":""},{"number":3,"title":"Our Solution","subtitle":"","headline":"","body":"","key_stats":[],"visual_suggestion":""},{"number":4,"title":"Product","subtitle":"How it works","headline":"","body":"","key_stats":[],"visual_suggestion":""},{"number":5,"title":"Business Model","subtitle":"Revenue","headline":"","body":"","key_stats":["Price: ₹X","Gross Margin: X%"],"visual_suggestion":""},{"number":6,"title":"Traction Plan","subtitle":"12 months","headline":"","body":"","key_stats":["Month 6: X units","Month 12: ₹X Cr"],"visual_suggestion":""},{"number":7,"title":"Competition","subtitle":"Why we win","headline":"","body":"","key_stats":[],"visual_suggestion":"2x2 matrix"},{"number":8,"title":"Go-To-Market","subtitle":"Customer acquisition","headline":"","body":"","key_stats":["CAC: ₹X","Payback: X months"],"visual_suggestion":""},{"number":9,"title":"Team","subtitle":"Why us","headline":"","body":"Founder background placeholder.","key_stats":[],"visual_suggestion":""},{"number":10,"title":"The Ask","subtitle":"Seed Round","headline":"","body":"Use of funds and milestones.","key_stats":["Runway: 18 months"],"visual_suggestion":"pie chart"}],
+"ask":"₹X Cr","use_of_funds":["X% — Product","Y% — Marketing","Z% — Operations"],"elevator_pitch":"30-second verbal pitch"}
+Return ONLY JSON.`;
+</script></body></html>
